@@ -1,0 +1,61 @@
+Net::FileMaker
+
+This module interacts with FileMaker Server's XML Interface.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Net::FileMaker
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net::FileMaker
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/Net::FileMaker
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/Net::FileMaker
+
+    Search CPAN
+        http://search.cpan.org/dist/Net::FileMaker/
+
+
+THINGS TO DO 
+
+There's plenty to worked on:
+
+	* Better authentication handling
+	* Comprehensive test suite for those with an accessible FileMaker Server
+	* Removing redundant code
+	* Full support for the entire XML interface
+	* Better error handling
+	* XSLT support
+	* Future support to send headers to "mimmic" the PHP API
+	* Potentially supporting scraping the IWP interface as well
+
+
+LICENSE AND COPYRIGHT
+
+Copyright (C) 2010 Squeeks.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+FileMaker Server, FileMaker and other related names are trademarks of FileMaker Inc.
+
+See http://dev.perl.org/licenses/ for more information.
+
