@@ -16,7 +16,9 @@ WriteMakefile(
 	'LWP' 		=> 0,
 	'XML::Simple'   => "2.18",
     },
-    
+
+    MIN_PERL_VERSION => '5.008',
+
     META_MERGE => {
 	resources => {
             repository => 'http://github.com/squeeks/Net-FileMaker'
