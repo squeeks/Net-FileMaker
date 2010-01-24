@@ -1,4 +1,7 @@
 Revision history for Net::FileMaker
 
+0.02	2010-01-24
+	Documentation and pre-requisites fixups.
+
 0.01    2010-01-22
         This is the initial release CPANified from the existing codebase. The start of a long journey.

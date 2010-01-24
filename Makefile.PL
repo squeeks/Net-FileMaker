@@ -12,16 +12,14 @@ WriteMakefile(
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {
-        'Test::More' => 0,
-    },
-    BUILD_REQUIRES => {
-    	'LWP' 		=> 0,
+        'Test::More'	=> 0,
+	'LWP' 		=> 0,
 	'XML::Simple'   => "2.18",
     },
     
     META_MERGE => {
 	resources => {
-            repository => 'http://github/squeeks/Net-FileMaker'
+            repository => 'http://github.com/squeeks/Net-FileMaker'
 	}
     },
 

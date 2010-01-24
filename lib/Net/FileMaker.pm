@@ -15,17 +15,16 @@ Net::FileMaker - Interact with FileMaker Server
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
 
-
-Perhaps a little code snippet.
+This package provides an interface to FileMaker Server's various APIs - Initially this is limited to the XML based API.
 
     use Net::FileMaker;
 
