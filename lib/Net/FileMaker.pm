@@ -15,11 +15,11 @@ Net::FileMaker - Interact with FileMaker Server
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 =head1 SYNOPSIS
@@ -34,7 +34,6 @@ This package provides an interface to FileMaker Server's various APIs - Initiall
     my $layouts = $fms->get_layouts('database');
 
     
-
 =head1 METHODS
 
 =head2 new($host,$user,$pass)
@@ -63,14 +62,14 @@ sub new
 	return bless $self, $class;
 }
 
-=head2 get_databases()
+=head2 dbnames
 
 Lists all XML enabled databases for a given host. This method is the only one that doesn't require 
 authentication.
 
 =cut
 
-sub get_databases
+sub dbnames
 {
 	my $self = shift;
 	my $res  = $self->_request('-dbnames');
@@ -86,13 +85,13 @@ sub get_databases
 	}
 }
 
-=head2 get_layouts($database)
+=head2 layoutnames($database)
 
 Returns all layouts accessible for the respective database.
 
 =cut
 
-sub get_layouts
+sub layoutnames
 {
 	my ($self, $database) = @_;
 	my $res = $self->_request( '-db='.uri_escape_utf8($database).'&-layoutnames');
@@ -109,38 +108,13 @@ sub get_layouts
 	}
 }
 
-=head2 total_rows($database, $layout)
-
-Returns a scalar with the total rows for a given database and layout.
-
-=cut
-
-sub total_rows
-{
-	my($self, $database, $layout) = @_;
-
-	# Just do a findall with 1 record and parse the result. This might break on an empty database.
-	my $res   = $self->_request('-findall&-max=1&-db='.uri_escape_utf8($database)."&-lay=".uri_escape_utf8($layout));
-
-	if($res->is_success)
-	{
-		my $xml = XMLin($res->content);
-		
-		return $xml->{resultset}->{count};
-	}
-	else
-	{
-		return undef;
-	}
-}
-
 =head2 find_all($database, $layout, %options)
 
 Returns all rows on a specific database and layout.
 
 =cut
 
-sub find_all
+sub findall
 {
 	my ($self, $database, $layout, %attr) = @_;
 
@@ -168,7 +142,59 @@ sub find_all
 		return undef;
 	}
 
+}
 
+=head2 total_rows($database, $layout)
+
+Returns a scalar with the total rows for a given database and layout.
+
+=cut
+
+sub total_rows
+{
+	my($self, $database, $layout) = @_;
+
+	# Just do a findall with 1 record and parse the result. This might break on an empty database.
+	my $res   = $self->_request('-findall&-max=1&-db='.uri_escape_utf8($database)."&-lay=".uri_escape_utf8($layout));
+
+	if($res->is_success)
+	{
+		my $xml = XMLin($res->content);
+		
+		return $xml->{resultset}->{count};
+	}
+	else
+	{
+		return undef;
+	}
+}
+
+
+=head2 DEPRECATED METHODS
+
+Method names introduced in the initial two releases were, in part inconsistent to the naming scheme used by the FileMaker API itself. Those methods that make direct calls to identical queries have been named identically to match, to make life easier for everyone. As they were introduced so early, the older methods will stay supported until the 0.10 release, by then they, along with this section, be removed.
+
+=cut
+
+sub get_databases
+{
+	my($self) = @_;
+	warn 'The get_databases() method will be deprecated. Please use the dbnames() method instead.';
+	return $self->dbnames();
+}
+
+sub get_layouts
+{
+	my($self, $database) = @_;
+	warn 'The get_layouts() method will be deprecated. Please use the layoutnames() method instead.';
+	return $self->layoutnames($database);
+}
+
+sub find_all
+{
+	my ($self, $database, $layout, %attr);
+	warn 'The find_all() method will be deprecated. Please use the findall() method instead.';
+	return $self->findall($database, $layout, %attr);
 }
 
 
@@ -253,3 +279,4 @@ See http://dev.perl.org/licenses/ for more information.
 =cut
 
 1; # End of Net::FileMaker
+
