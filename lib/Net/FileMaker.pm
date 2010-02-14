@@ -30,8 +30,8 @@ This package provides an interface to FileMaker Server's various APIs - Initiall
 
     my $fms = Net::FileMaker->new('http://fmserver', 'username', 'pass');
     
-    my $dbs = $fms->get_databases;
-    my $layouts = $fms->get_layouts('database');
+    my $dbs = $fms->dbnames;
+    my $layouts = $fms->layoutnames('database');
 
     
 =head1 METHODS
@@ -108,7 +108,7 @@ sub layoutnames
 	}
 }
 
-=head2 find_all($database, $layout, %options)
+=head2 findall($database, $layout, %options)
 
 Returns all rows on a specific database and layout.
 
@@ -279,4 +279,3 @@ See http://dev.perl.org/licenses/ for more information.
 =cut
 
 1; # End of Net::FileMaker
-

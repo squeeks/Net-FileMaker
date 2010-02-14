@@ -1,5 +1,8 @@
 Revision history for Net::FileMaker
 
+0.03	2010-02-14
+	Methods renamed - see the deprecated section in the documentation, in addition basic tests are being put in.
+
 0.02	2010-01-24
 	Documentation and pre-requisites fixups.
 
