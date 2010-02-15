@@ -15,4 +15,8 @@ eval "use Pod::Coverage $min_pc";
 plan skip_all => "Pod::Coverage $min_pc required for testing POD coverage"
     if $@;
 
-all_pod_coverage_ok();
+# Keep it from bothering with deprecated methods
+my $deprecated = { trustme => [qr/^(get_layouts|get_databases|find_all)$/] };
+all_pod_coverage_ok( "Net::FileMaker", $deprecated );
+
+#all_pod_coverage_ok();
