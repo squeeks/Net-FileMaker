@@ -1,221 +1,65 @@
 package Net::FileMaker;
 
-use warnings;
 use strict;
+use warnings;
 
 use 5.008;
 
 use LWP::UserAgent;
-use XML::Simple;
 use URI::Escape;
 
 =head1 NAME
 
-Net::FileMaker - Interact with FileMaker Server
+Net::FileMaker - Interact with FileMaker services
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05 - Developer release 1
 
 =cut
 
-our $VERSION = '0.04';
-
+our $VERSION = 0.05_01;
 
 =head1 SYNOPSIS
 
-This package provides an interface to FileMaker Server's various APIs - Initially this is limited to the XML based API.
-
     use Net::FileMaker;
+    my $fms  = Net::FileMaker->new(host => $host, type => 'xml');
 
-    my $fms = Net::FileMaker->new('http://fmserver', 'username', 'pass');
-    
-    my $dbs = $fms->dbnames;
-    my $layouts = $fms->layoutnames('database');
+Net::FileMaker provides an interface to FileMaker's various HTTP-based interfaces, at present only the XML 
+API is supported, but further support to include XSLT and other means is planned.
 
-    
 =head1 METHODS
 
-=head2 new($host,$user,$pass)
+=head2 new(host => $host, type => 'xml')
 
-Creates a new object. Username and password are not mandatory if you're just planning on calling get_databases, 
-else you'll be required to supply it pending the permissions of your setup.
-
-B<NOTE:> This will most likely change in future versions.
+Creates a new object. Host names must be valid URI, C<http://192.168.0.1/> would be a valid example. Type specifies 
+the type of database access - XML, XSLT etc. At present only C<xml> is valid. If this is unspecified, XML is the default.
 
 =cut
 
 sub new
 {
-	my($class, $host, $user, $pass) = @_;
-	my $self = {
-		host	=> $host,
-		user	=> $user || undef,
-		pass	=> $pass || undef,
-		ua	=> LWP::UserAgent->new,
-		
-		# For now, using the resultset class would be the best idea as it's the most
-		# flexible, but in the future we'll need to support at least layout set as well.
-		resultset_path	=> '/fmi/xml/fmresultset.xml?',
-	};
+	my($class, %args) = @_;
 
-	return bless $self, $class;
-}
-
-=head2 dbnames
-
-Lists all XML enabled databases for a given host. This method is the only one that doesn't require 
-authentication.
-
-=cut
-
-sub dbnames
-{
-	my $self = shift;
-	my $res  = $self->_request('-dbnames');
-
-	if($res->is_success)
+	if($args{type} eq 'xml')
 	{
-		my $xml = XMLin($res->content);
-		return $xml->{resultset}->{record}->{field}->{data};
+		#TODO: Validate host is correct, must have http(s)? set first.
+		require Net::FileMaker::XML;
+		return  Net::FileMaker::XML->new(%args);
 	}
+	elsif(!$args{type} || $args{type} eq '')
+	{
+		# Assume no type specified - use XML.
+		require Net::FileMaker::XML;
+		return  Net::FileMaker::XML->new(%args);
+	}
+	# TODO: Add XSLT, PHP, etc.
 	else
 	{
-		return undef;
-	}
-}
-
-=head2 layoutnames($database)
-
-Returns all layouts accessible for the respective database.
-
-=cut
-
-sub layoutnames
-{
-	my ($self, $database) = @_;
-	my $res = $self->_request( '-db='.uri_escape_utf8($database).'&-layoutnames');
-
-	if($res->is_success)
-	{
-		my $xml = XMLin($res->content);
-		
-		return $xml->{resultset}->{record};
-	}
-	else
-	{
-		return undef;
-	}
-}
-
-=head2 findall($database, $layout, %options)
-
-Returns all rows on a specific database and layout.
-
-=cut
-
-sub findall
-{
-	my ($self, $database, $layout, %attr) = @_;
-
-	my $url = '-findall&-db=' . $database . '' . $layout;  # This could be done better...
-
-	# Keys are just actual URL vars from the API minus the prefixing dash.
-	# According to the documentation, that means all the options are:
-	# –recid, –lop, –op, –max, –skip, –sortorder, –sortfield, –script, –script.prefind, –script.presort
-
-	for my $var (keys %attr)
-	{	
-		$url .= sprintf('-%s=%s&', uri_escape_utf8($var), uri_escape_utf8($attr{$var}));
-	}
-
-	my $res = $self->_request($url);
-
-	if($res->is_success)
-	{
-		my $xml = XMLin($res->content);
-
-		return $xml->{resultset};
-	}
-	else
-	{
-		return undef;
+		die('Unknown type specified.');
 	}
 
 }
-
-=head2 total_rows($database, $layout)
-
-Returns a scalar with the total rows for a given database and layout.
-
-=cut
-
-sub total_rows
-{
-	my($self, $database, $layout) = @_;
-
-	# Just do a findall with 1 record and parse the result. This might break on an empty database.
-	my $res   = $self->_request('-findall&-max=1&-db='.uri_escape_utf8($database)."&-lay=".uri_escape_utf8($layout));
-
-	if($res->is_success)
-	{
-		my $xml = XMLin($res->content);
-		
-		return $xml->{resultset}->{count};
-	}
-	else
-	{
-		return undef;
-	}
-}
-
-
-=head2 DEPRECATED METHODS
-
-Method names introduced in the initial two releases were, in part inconsistent to the naming scheme used by the FileMaker API itself. Those methods that make direct calls to identical queries have been named identically to match, to make life easier for everyone. As they were introduced so early, the older methods will stay supported until the 0.10 release, by then they, along with this section, be removed.
-
-=cut
-
-sub get_databases
-{
-	my($self) = @_;
-	warn 'The get_databases() method will be deprecated. Please use the dbnames() method instead.';
-	return $self->dbnames();
-}
-
-sub get_layouts
-{
-	my($self, $database) = @_;
-	warn 'The get_layouts() method will be deprecated. Please use the layoutnames() method instead.';
-	return $self->layoutnames($database);
-}
-
-sub find_all
-{
-	my ($self, $database, $layout, %attr);
-	warn 'The find_all() method will be deprecated. Please use the findall() method instead.';
-	return $self->findall($database, $layout, %attr);
-}
-
-
-sub _request
-{
-	my ($self, $args) = @_;
-
-	my $url = $self->{host}.$self->{resultset_path}.$args;
-
-	my $req = HTTP::Request->new(GET => $url);
-
-	if($self->{user} && $self->{pass})
-	{
-		$req->authorization_basic( $self->{user}, $self->{pass});
-	}
-
-	my $res = $self->{ua}->request($req);
-	
-	return $res;
-}
-
 
 =head1 AUTHOR
 
