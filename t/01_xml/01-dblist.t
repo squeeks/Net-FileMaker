@@ -19,7 +19,7 @@ SKIP:
 	ok($db, 'Databases found');
 
 	# Direct access the package
-	my $fmx = Net::FileMaker::XML->new();
+	my $fmx = Net::FileMaker::XML->new( host => $ENV{FMS_HOST});
 	ok($fmx, 'Directly constructed Net::FileMaker::XML');
 	my $dbx = $fmx->dbnames;
 	ok($dbx, 'Databases found');
