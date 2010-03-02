@@ -3,6 +3,8 @@ MANIFEST
 Makefile.PL
 README
 lib/Net/FileMaker.pm
+lib/Net/FileMaker/XML.pm
+lib/Net/FileMaker/XML/Database.pm
 t/00_load/00-net-filemaker.t
 t/01_xml/00-load.t
 t/01_xml/01-dblist.t
