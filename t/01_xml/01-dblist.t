@@ -15,7 +15,7 @@ SKIP:
 	# Construct through Net::FileMaker
 	my $fm = Net::FileMaker->new( host => $ENV{FMS_HOST}, type => 'xml');
 	ok($fm, 'Net::FileMaker::XML constructed through Net::FileMaker');
-	my $db = $fh->dbnames;
+	my $db = $fm->dbnames;
 	ok($db, 'Databases found');
 
 	# Direct access the package

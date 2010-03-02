@@ -10,10 +10,11 @@ WriteMakefile(
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),
-    PL_FILES            => {},
+    
     PREREQ_PM => {
         'Test::More'	=> 0,
 	'LWP' 		=> 0,
+	'URI'		=> 0,
 	'XML::Simple'   => "2.18",
     },
 
@@ -25,7 +26,7 @@ WriteMakefile(
 	}
     },
 
-    test      		=> {TESTS => join( ' ', (glob( 't/*.t'), glob('t/*/*.t')))},
+    test      		=> { TESTS => join( ' ', (glob( 't/*.t'), glob('t/*/*.t'))) },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Net::FileMaker-*' },
 );
