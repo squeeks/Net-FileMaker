@@ -7,7 +7,7 @@ use XML::Simple;
 
 =head1 NAME
 
-Net::FileMaker::XML - Interact with FileMaker XML Interface.
+Net::FileMaker::XML - Interact with FileMaker Server's XML Interface.
 
 =head1 VERSION
 
@@ -37,8 +37,8 @@ sub new
 	my($class, %args) = @_;
 	my $self = {
 			host => $args{host},
-			resultset => '/fmi/xml/fmresultset.xml?',
-			ua   => LWP::UserAgent->new
+			ua   => LWP::UserAgent->new,
+			resultset => '/fmi/xml/fmresultset.xml?',			
 		};
 
 	return bless $self;
@@ -83,7 +83,21 @@ sub dbnames
 	{
 		my $xml = XMLin($res->content);
 		#FIXME: Needs to handle > 1 DB returned, might have to if(ref()) a bit.
-		return $xml->{resultset}->{record}->{field}->{data};
+		if(ref($xml->{resultset}->{record}) eq 'HASH')
+		{
+			return $xml->{resultset}->{record}->{field}->{data};
+		}
+		elsif(ref($xml->{resultset}->{record}) eq 'ARRAY')
+		{
+			my @databases;
+
+			for my $record (@{$xml->{resultset}->{record}})
+			{
+				push @databases, $record->{field}->{data};
+			}
+			
+			return @databases;
+		}
 	}
 	else
 	{
