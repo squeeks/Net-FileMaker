@@ -34,9 +34,10 @@ key in the constructor as "xml", although this is not enforced.
 
 sub new
 {
-	my($class, $host, $db, $user, $pass) = @_;
+	my($class, %args) = @_;
 	my $self = {
-			host => $host,
+			host => $args{host},
+			resultset => '/fmi/xml/fmresultset.xml?',
 			ua   => LWP::UserAgent->new
 		};
 
@@ -52,11 +53,11 @@ Initiates a new database object for querying data in the databse.
 
 sub database
 {
-	my($self, $host, %args) = @_;
+	my($self, %args) = @_;
 
 	require Net::FileMaker::XML::Database;
 	return  Net::FileMaker::XML::Database->new(
-			host => $host,
+			host => $self->{host},
 			db   => $args{db},
 			user => $args{user} || '',
 			pass => $args{pass} || ''
@@ -76,11 +77,12 @@ Lists all XML/XSLT enabled databases for a given host. This method requires no a
 sub dbnames
 {
 	my $self = shift;
-	my $res  = $self->_request('-dbnames');
+	my $res  = $self->_request(resultset => $self->{resultset}, query =>'-dbnames');
 
 	if($res->is_success)
 	{
 		my $xml = XMLin($res->content);
+		#FIXME: Needs to handle > 1 DB returned, might have to if(ref()) a bit.
 		return $xml->{resultset}->{record}->{field}->{data};
 	}
 	else
@@ -91,7 +93,6 @@ sub dbnames
 }
 
 
-# FIXME FIXME FIXME FIXME
 #TODO: This method needs to do the XML parsing for us...
 #TODO: before that, it needs to handle errors for us as well.
 sub _request
@@ -99,7 +100,8 @@ sub _request
 	my ($self, %args) = @_;
 
 	# Everything in %args should be uri encoded.
-	my $url = $self->{host}.$args{resultset}.$args{query};
+	my $url = $self->{host}.$self->{resultset}.$args{query};
+
 	my $req = HTTP::Request->new(GET => $url);
 
 	if($args{user} && $args{pass})
@@ -108,8 +110,10 @@ sub _request
 	}
 
 	my $res = $self->{ua}->request($req);
-	
+
 	return $res;
+
 }
 
 1; # End of Net::FileMaker::XML;
+
