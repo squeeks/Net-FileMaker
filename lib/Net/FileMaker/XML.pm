@@ -96,15 +96,15 @@ sub dbnames
 #TODO: before that, it needs to handle errors for us as well.
 sub _request
 {
-	my ($self, $args) = @_;
+	my ($self, %args) = @_;
 
-	my $url = $self->{host}.$self->{resultset_path}.$args;
-
+	# Everything in %args should be uri encoded.
+	my $url = $self->{host}.$args{resultset}.$args{query};
 	my $req = HTTP::Request->new(GET => $url);
 
-	if($self->{user} && $self->{pass})
+	if($args{user} && $args{pass})
 	{
-		$req->authorization_basic( $self->{user}, $self->{pass});
+		$req->authorization_basic( $args{user}, $args{pass});
 	}
 
 	my $res = $self->{ua}->request($req);
