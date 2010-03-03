@@ -95,6 +95,8 @@ sub dbnames
 	if($res->is_success)
 	{
 		my $xml = XMLin($res->content);
+
+
 		if(ref($xml->{resultset}->{record}) eq 'HASH')
 		{
 			return $xml->{resultset}->{record}->{field}->{data};
@@ -175,6 +177,34 @@ sub _request_xml
 		# TODO: Incorporate the HTTP error codes into the response so
 		# N::F::Error::HTTP can deal with it.
 		return undef;
+	}
+
+}
+
+
+# _compose_arrayref($xml)
+# 
+# A common occurance is recomposing response data so unnecessary structure is removed.
+sub _compose_arrayref
+{
+	my $xml = shift;
+	
+	my @output;
+
+	if(ref($xml->{resultset}->{record}) eq 'HASH')
+	{
+		return $xml->{resultset}->{record}->{field}->{data};
+	}
+	elsif(ref($xml->{resultset}->{record}) eq 'ARRAY')
+	{
+		my @output;
+
+		for my $record (@{$xml->{resultset}->{record}})
+		{
+			push @output, $record->{field}->{data};
+		}
+		
+		return \@output;
 	}
 
 }
