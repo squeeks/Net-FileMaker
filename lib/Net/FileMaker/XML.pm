@@ -95,23 +95,8 @@ sub dbnames
 	if($res->is_success)
 	{
 		my $xml = XMLin($res->content);
-
-
-		if(ref($xml->{resultset}->{record}) eq 'HASH')
-		{
-			return $xml->{resultset}->{record}->{field}->{data};
-		}
-		elsif(ref($xml->{resultset}->{record}) eq 'ARRAY')
-		{
-			my @databases;
-
-			for my $record (@{$xml->{resultset}->{record}})
-			{
-				push @databases, $record->{field}->{data};
-			}
-			
-			return \@databases;
-		}
+		
+		return $self->_compose_arrayref($xml);
 	}
 	else
 	{
