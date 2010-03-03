@@ -32,8 +32,8 @@ API is supported, but further support to include XSLT and other means is planned
 
 =head2 new(host => $host, type => 'xml')
 
-Creates a new object. Host names must be valid URI, C<http://192.168.0.1/> would be a valid example. Type specifies 
-the type of database access - XML, XSLT etc. At present only C<xml> is valid. If this is unspecified, XML is the default.
+Creates a new object. Host names must be valid URI. The type key specifies the type of database access - 
+XML, XSLT etc. At present only C<xml> is valid. If this is unspecified, XML is the default.
 
 =cut
 
