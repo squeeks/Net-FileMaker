@@ -27,7 +27,7 @@ This module handles all the tasks with XML data.
     my $fm = Net::FileMaker::XML->new();
     my $db = $fm->database(db => $db, user => $user, pass => $pass);
     
-    
+    my $layouts = $db->layoutnames;
 
 =cut
 
@@ -40,8 +40,9 @@ sub new
 		db        => $args{db},
 		user      => $args{user},
 		pass      => $args{pass},
-		resultset => '/fmi/xml/fmresultset.xml?',		
-		
+		resultset => '/fmi/xml/fmresultset.xml?',
+                ua        => LWP::UserAgent->new,
+                xml       => XML::Simple->new		
 	};
 
 	return bless $self;
@@ -49,19 +50,25 @@ sub new
 
 =head2 layoutnames
 
-Returns all layouts accessible for the respective database.
+Returns an arrayref containing layouts accessible for the respective database.
 
 =cut
 
 sub layoutnames
 {
 	my $self = shift;
-	my $res = $self->_request(resultset => $self->{resultset}, query =>'-db='.uri_escape_utf8($self->{db}).'&-layoutnames');
+	my $res = $self->_request(
+		user => $self->{user},
+		pass => $self->{pass},
+		resultset => $self->{resultset},
+		query =>'-db='.uri_escape_utf8($self->{db}).'&-layoutnames'
+	);
 
 	if($res->is_success)
 	{
-		my $xml = XMLin($res->content);
-		return $xml->{resultset}->{record};
+		my $xml = $self->{xml}->XMLin($res->content);
+
+		return $self->_compose_arrayref($xml);
 	}
 	else
 	{
@@ -95,7 +102,7 @@ sub findall
 
 	if($res->is_success)
 	{
-		my $xml = XMLin($res->content);
+		my $xml = $self->{xml}->XMLin($res->content);
 
 		return $xml->{resultset};
 	}
