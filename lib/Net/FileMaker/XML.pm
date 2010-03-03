@@ -108,7 +108,7 @@ sub dbnames
 				push @databases, $record->{field}->{data};
 			}
 			
-			return @databases;
+			return \@databases;
 		}
 	}
 	else
