@@ -19,16 +19,32 @@ our $VERSION = 0.05_01;
 
 =head1 SYNOPSIS
 
-There is no need to call this module directly, you can simply invoke L<Net::FileMaker> directly and specify the 'type' 
-key in the constructor as "xml", although this is not enforced.
+This module provides the interface for communicating with FileMaker Server's XML service.
+
+You can simply invoke L<Net::FileMaker> directly and specify the 'type' 
+key in the constructor as "xml":
 
     use Net::FileMaker;
-
+    
     my $fms = Net::FileMaker->new(host => $host, type => 'xml');
     my $dbnames = $fms->dbnames;
     my $fmdb = $fms->database();
 
+
+It's also possible to call this module directly:
+
+    use Net::FileMaker::XML;
+    
+    my $fms = Net::FileMaker::XML->new(host => $host);
+    my $dbnames = $fms->dbnames;
+    my $fmdb = $fms->database();
+
+
 =head1 METHODS
+
+=head2 new(host => $host)
+
+Creates a new object. The specified must be a valid address or host name.
 
 =cut
 
@@ -36,10 +52,10 @@ sub new
 {
 	my($class, %args) = @_;
 	my $self = {
-			host => $args{host},
-			ua   => LWP::UserAgent->new,
-			resultset => '/fmi/xml/fmresultset.xml?',			
-		};
+		host	  => $args{host},
+		ua 	  => LWP::UserAgent->new,
+		resultset => '/fmi/xml/fmresultset.xml?', # Entirely for dbnames();
+	};
 
 	return bless $self;
 
@@ -64,9 +80,6 @@ sub database
 		);
 }
 
-#
-#	TODO: Put in the bits to handle layouts.
-#
 
 =head2 dbnames
 
@@ -82,7 +95,6 @@ sub dbnames
 	if($res->is_success)
 	{
 		my $xml = XMLin($res->content);
-		#FIXME: Needs to handle > 1 DB returned, might have to if(ref()) a bit.
 		if(ref($xml->{resultset}->{record}) eq 'HASH')
 		{
 			return $xml->{resultset}->{record}->{field}->{data};
@@ -107,14 +119,17 @@ sub dbnames
 }
 
 
-#TODO: This method needs to do the XML parsing for us...
-#TODO: before that, it needs to handle errors for us as well.
+
+# _request(query => $query, resultset => $resultset, user => $user, pass => $pass)
+#
+# Performs a request to the FileMaker Server. The query and resultset keys are mandatory, 
+# however user and pass keys are not. The query should always be URI encoded.
 sub _request
 {
 	my ($self, %args) = @_;
 
 	# Everything in %args should be uri encoded.
-	my $url = $self->{host}.$self->{resultset}.$args{query};
+	my $url = $self->{host}.$args{resultset}.$args{query};
 
 	my $req = HTTP::Request->new(GET => $url);
 
@@ -126,6 +141,41 @@ sub _request
 	my $res = $self->{ua}->request($req);
 
 	return $res;
+
+}
+
+# _request_xml(query => $query, resultset => $resultset, user => $user, pass => $pass)
+#
+# Performs the same as _request, except will load and parse the XML itself. Returns a
+# hashref containing the parsed XML on success.
+sub _request_xml
+{
+	my($self, %args) = @_;
+
+	my $url = $self->{host}.$self->{resultset}.$args{query};
+
+	my $req = HTTP::Request->new(GET => $url);
+
+	if($args{user} && $args{pass})
+	{
+		$req->authorization_basic( $args{user}, $args{pass});
+	}
+
+	my $res = $self->{ua}->request($req);
+
+	if($res->is_success)
+	{
+		my $xml = XMLin($res->content);
+		#TODO: Error Handling.
+		return $xml;
+	}
+	else
+	{
+		# Shouldn't really return undef, rather...
+		# TODO: Incorporate the HTTP error codes into the response so
+		# N::F::Error::HTTP can deal with it.
+		return undef;
+	}
 
 }
 
