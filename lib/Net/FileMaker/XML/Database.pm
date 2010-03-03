@@ -3,6 +3,8 @@ package Net::FileMaker::XML::Database;
 use strict;
 use warnings;
 
+use URI::Escape;
+
 our @ISA = qw(Net::FileMaker::XML);
 
 =head1 NAME
@@ -21,6 +23,12 @@ our $VERSION = 0.05_01;
 
 This module handles all the tasks with XML data.
 
+    use Net::FileMaker::XML;
+    my $fm = Net::FileMaker::XML->new();
+    my $db = $fm->database(db => $db, user => $user, pass => $pass);
+    
+    
+
 =cut
 
 sub new
@@ -28,11 +36,11 @@ sub new
 	my($class, %args) = @_;
 
 	my $self = {
-		host => $args{host},
-		db   => $args{db},
-		user => $args{user},
-		pass => $args{pass},
-		resultset_path	=> '/fmi/xml/fmresultset.xml?',		
+		host      => $args{host},
+		db        => $args{db},
+		user      => $args{user},
+		pass      => $args{pass},
+		resultset => '/fmi/xml/fmresultset.xml?',		
 		
 	};
 
@@ -48,12 +56,11 @@ Returns all layouts accessible for the respective database.
 sub layoutnames
 {
 	my $self = shift;
-	my $res = $self->_request( '-db='.uri_escape_utf8($self->{db}).'&-layoutnames');
+	my $res = $self->_request(resultset => $self->{resultset}, query =>'-db='.uri_escape_utf8($self->{db}).'&-layoutnames');
 
 	if($res->is_success)
 	{
 		my $xml = XMLin($res->content);
-		
 		return $xml->{resultset}->{record};
 	}
 	else
@@ -70,21 +77,21 @@ Returns all rows on a specific database and layout.
 
 sub findall
 {
-	my ($self, $database, $layout, %attr) = @_;
+	my ($self, %args) = @_;
 
-	my $url = '-findall&-db=' . $database . '' . $layout;  # This could be done better...
+	my $url = '-findall&-db=' . $args{db} . '' . $args{layout}; 
 
 	# Keys are just actual URL vars from the API minus the prefixing dash.
 	# According to the documentation, that means all the options are:
 	# –recid, –lop, –op, –max, –skip, –sortorder, –sortfield, –script, –script.prefind, –script.presort
 
 	#TODO: Validations done on the applicable params so we don't spew junk to the server.
-	for my $var (keys %attr)
+	for my $var (keys %{$args{params}})
 	{	
-		$url .= sprintf('-%s=%s&', uri_escape_utf8($var), uri_escape_utf8($attr{$var}));
+		$url .= sprintf('-%s=%s&', uri_escape_utf8($var), uri_escape_utf8($args{$var}));
 	}
 
-	my $res = $self->_request($url);
+	my $res = $self->_request(query=> $url, resultset => $self->{resultset});
 
 	if($res->is_success)
 	{
@@ -110,7 +117,7 @@ sub total_rows
 	my($self, $database, $layout) = @_;
 
 	# Just do a findall with 1 record and parse the result. This might break on an empty database.
-	my $res   = $self->_request('-findall&-max=1&-db='.uri_escape_utf8($database)."&-lay=".uri_escape_utf8($layout));
+	my $res = $self->_request(resultset => $self->{resultset}, query =>'-findall&-max=1&-db='.uri_escape_utf8($database)."&-lay=".uri_escape_utf8($layout));
 
 	if($res->is_success)
 	{
