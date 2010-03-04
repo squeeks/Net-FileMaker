@@ -13,11 +13,11 @@ Net::FileMaker::XML::Database;
 
 =head1 VERSION
 
-Version 0.05 - Developer release 1
+Version 0.05
 
 =cut
 
-our $VERSION = 0.05_01;
+our $VERSION = 0.05;
 
 =head1 SYNOPSIS
 
@@ -58,16 +58,16 @@ sub layoutnames
 {
 	my $self = shift;
 	my $res = $self->_request(
-		user => $self->{user},
-		pass => $self->{pass},
+		user 	  => $self->{user},
+		pass 	  => $self->{pass},
 		resultset => $self->{resultset},
-		query =>'-db='.uri_escape_utf8($self->{db}).'&-layoutnames'
+		query 	  =>'-db='.uri_escape_utf8($self->{db}).'&-layoutnames'
 	);
 
 	if($res->is_success)
 	{
 		my $xml = $self->{xml}->parse($res->content);
-		return $self->_compose_arrayref('LAYOUT_NAME',$xml->simplify);
+		return $self->_compose_arrayref('LAYOUT_NAME', $xml->simplify);
 	}
 	else
 	{
@@ -85,16 +85,16 @@ sub scriptnames
 {
 	my $self = shift;
 	my $res = $self->_request(
-		user => $self->{user},
-		pass => $self->{pass},
+		user	  => $self->{user},
+		pass 	  => $self->{pass},
 		resultset => $self->{resultset},
-		query =>'-db='.uri_escape_utf8($self->{db}).'&-scriptnames'
+		query 	  =>'-db='.uri_escape_utf8($self->{db}).'&-scriptnames'
 	);
 
 	if($res->is_success)
 	{
 		my $xml = $self->{xml}->parse($res->content);
-		return $self->_compose_arrayref('LAYOUT_NAME',$xml->simplify);
+		return $self->_compose_arrayref('SCRIPT_NAME', $xml->simplify);
 	}
 	else
 	{
@@ -127,18 +127,23 @@ sub findall
 
         $url .= '-findall&-db=' . uri_escape_utf8($self->{db}) . '&-lay=' . $layout;
 
-	my $res = $self->_request(resultset => $self->{resultset}, user => $self->{user}, pass => $self->{pass}, query=> $url, resultset => $self->{resultset});
+	my $res = $self->_request(
+			resultset => $self->{resultset}, 
+			user 	  => $self->{user}, 
+			pass 	  => $self->{pass}, 
+			query	  => $url
+	);
 
 	if($res->is_success)
 	{
 		my $xml = $self->{xml}->parse($res->content);
-
-		return $xml;
+		my $xml_data = $xml->simplify;
+		return $xml_data->{resultset}->{record};
 	}
 	else
 	{
 		return $res;
-	}
+	}2
 
 }
 
@@ -153,12 +158,16 @@ sub total_rows
 	my($self, $layout) = @_;
 
 	# Just do a findall with 1 record and parse the result. This might break on an empty database.
-	my $res = $self->_request(resultset => $self->{resultset}, query =>'-findall&-max=1&-db='.uri_escape_utf8($self->{db})."&-lay=".uri_escape_utf8($layout));
+	my $res = $self->_request(
+		resultset => $self->{resultset}, 
+		query 	  =>'-findall&-max=1&-db='.uri_escape_utf8($self->{db})."&-lay=".uri_escape_utf8($layout)
+	);
 
 	if($res->is_success)
 	{
 		my $xml = $self->{xml}->parse($res->content);
-		return $self->_compose_arrayref($xml->simplify);	
+		my $xml_data = $xml->simplify;
+		return $xml_data->{resultset}->{count};
 	}
 	else
 	{

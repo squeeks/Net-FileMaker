@@ -14,11 +14,11 @@ Net::FileMaker - Interact with FileMaker services
 
 =head1 VERSION
 
-Version 0.05 - Developer release 1
+Version 0.05
 
 =cut
 
-our $VERSION = 0.05_01;
+our $VERSION = 0.05;
 
 =head1 SYNOPSIS
 
@@ -60,6 +60,10 @@ sub new
 	}
 
 }
+
+=head1 DOCUMENTATION
+
+As all of the current structure is confied to the XML base, see L<Net::FileMaker::XML>.
 
 =head1 AUTHOR
 

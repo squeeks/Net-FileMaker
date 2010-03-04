@@ -1,5 +1,12 @@
 Revision history for Net::FileMaker
 
+0.06	2010-03-04
+	+ Significant changes to the entire structure of the distrobution, and as such the interface has also changed,
+	So please check the documentation.
+	+ XML::Simple has been dropped for XML::Twig
+	+ Test suite has been restructured.
+	+ More documentation.
+
 0.04	2010-02-15
 	Minor test bugfix
 

@@ -11,11 +11,11 @@ Net::FileMaker::XML - Interact with FileMaker Server's XML Interface.
 
 =head1 VERSION
 
-Version 0.05 - Developer release 1
+Version 0.05
 
 =cut
 
-our $VERSION = 0.05_01;
+our $VERSION = 0.05;
 
 =head1 SYNOPSIS
 
@@ -86,7 +86,10 @@ Lists all XML/XSLT enabled databases for a given host. This method requires no a
 sub dbnames
 {
 	my $self = shift;
-	my $res  = $self->_request(resultset => $self->{resultset}, query =>'-dbnames');
+	my $res  = $self->_request(
+			resultset => $self->{resultset}, 
+			query	  =>'-dbnames'
+	);
 
 	if($res->is_success)
 	{
@@ -188,5 +191,11 @@ sub _compose_arrayref
 	}
 
 }
+
+=head1 SEE ALSO
+
+L<Net::FileMaker::XML::Database>
+
+=cut
 
 1; # End of Net::FileMaker::XML;
