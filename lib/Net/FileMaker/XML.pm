@@ -3,7 +3,7 @@ package Net::FileMaker::XML;
 use strict;
 use warnings;
 
-use XML::Simple;
+use XML::Twig;
 
 =head1 NAME
 
@@ -27,13 +27,8 @@ key in the constructor as "xml":
     use Net::FileMaker;
     
     my $fms = Net::FileMaker->new(host => $host, type => 'xml');
-    my $dbnames = $fms->dbnames;
-    my $fmdb = $fms->database();
-
 
 It's also possible to call this module directly:
-
-    use Net::FileMaker::XML;
     
     my $fms = Net::FileMaker::XML->new(host => $host);
     my $dbnames = $fms->dbnames;
@@ -54,6 +49,7 @@ sub new
 	my $self = {
 		host	  => $args{host},
 		ua 	  => LWP::UserAgent->new,
+		xml	  => XML::Twig->new,
 		resultset => '/fmi/xml/fmresultset.xml?', # Entirely for dbnames();
 	};
 
@@ -94,9 +90,8 @@ sub dbnames
 
 	if($res->is_success)
 	{
-		my $xml = XMLin($res->content);
-		
-		return $self->_compose_arrayref($xml);
+		my $xml = $self->{xml}->parse($res->content);
+		return $self->_compose_arrayref('DATABASE_NAME', $xml->simplify);
 	}
 	else
 	{
@@ -167,12 +162,12 @@ sub _request_xml
 }
 
 
-# _compose_arrayref($xml)
+# _compose_arrayref($field_name, $xml)
 # 
 # A common occurance is recomposing response data so unnecessary structure is removed.
 sub _compose_arrayref
 {
-	my $xml = shift;
+	my ($self, $fieldname, $xml) = @_;
 	
 	my @output;
 
@@ -186,7 +181,7 @@ sub _compose_arrayref
 
 		for my $record (@{$xml->{resultset}->{record}})
 		{
-			push @output, $record->{field}->{data};
+			push @output, $record->{field}->{$fieldname}->{data};
 		}
 		
 		return \@output;
@@ -195,4 +190,3 @@ sub _compose_arrayref
 }
 
 1; # End of Net::FileMaker::XML;
-

@@ -42,7 +42,7 @@ sub new
 		pass      => $args{pass},
 		resultset => '/fmi/xml/fmresultset.xml?',
                 ua        => LWP::UserAgent->new,
-                xml       => XML::Simple->new		
+                xml       => XML::Twig->new
 	};
 
 	return bless $self;
@@ -66,15 +66,42 @@ sub layoutnames
 
 	if($res->is_success)
 	{
-		my $xml = $self->{xml}->XMLin($res->content);
-
-		return $self->_compose_arrayref($xml);
+		my $xml = $self->{xml}->parse($res->content);
+		return $self->_compose_arrayref('LAYOUT_NAME',$xml->simplify);
 	}
 	else
 	{
 		return undef;
 	}
 }
+
+=head2 scriptnames
+
+Returns an arrayref containing scripts accessible for the respective database.
+
+=cut
+
+sub scriptnames
+{
+	my $self = shift;
+	my $res = $self->_request(
+		user => $self->{user},
+		pass => $self->{pass},
+		resultset => $self->{resultset},
+		query =>'-db='.uri_escape_utf8($self->{db}).'&-scriptnames'
+	);
+
+	if($res->is_success)
+	{
+		my $xml = $self->{xml}->parse($res->content);
+		return $self->_compose_arrayref('LAYOUT_NAME',$xml->simplify);
+	}
+	else
+	{
+		return undef;
+	}
+}
+
 
 =head2 findall($layout, %options)
 
@@ -84,31 +111,33 @@ Returns all rows on a specific database and layout.
 
 sub findall
 {
-	my ($self, %args) = @_;
+	my ($self, $layout, $args) = @_;
 
-	my $url = '-findall&-db=' . $args{db} . '' . $args{layout}; 
+	my $url;
 
 	# Keys are just actual URL vars from the API minus the prefixing dash.
 	# According to the documentation, that means all the options are:
 	# –recid, –lop, –op, –max, –skip, –sortorder, –sortfield, –script, –script.prefind, –script.presort
 
 	#TODO: Validations done on the applicable params so we don't spew junk to the server.
-	for my $var (keys %{$args{params}})
+	for my $var (keys %{$args})
 	{	
-		$url .= sprintf('-%s=%s&', uri_escape_utf8($var), uri_escape_utf8($args{$var}));
+		$url .= sprintf('-%s=%s&', uri_escape_utf8($var), uri_escape_utf8($args->{$var}));
 	}
 
-	my $res = $self->_request(query=> $url, resultset => $self->{resultset});
+        $url .= '-findall&-db=' . uri_escape_utf8($self->{db}) . '&-lay=' . $layout;
+
+	my $res = $self->_request(resultset => $self->{resultset}, user => $self->{user}, pass => $self->{pass}, query=> $url, resultset => $self->{resultset});
 
 	if($res->is_success)
 	{
-		my $xml = $self->{xml}->XMLin($res->content);
+		my $xml = $self->{xml}->parse($res->content);
 
-		return $xml->{resultset};
+		return $xml;
 	}
 	else
 	{
-		return undef;
+		return $res;
 	}
 
 }
@@ -121,16 +150,15 @@ Returns a scalar with the total rows for a given database and layout.
 
 sub total_rows
 {
-	my($self, $database, $layout) = @_;
+	my($self, $layout) = @_;
 
 	# Just do a findall with 1 record and parse the result. This might break on an empty database.
-	my $res = $self->_request(resultset => $self->{resultset}, query =>'-findall&-max=1&-db='.uri_escape_utf8($database)."&-lay=".uri_escape_utf8($layout));
+	my $res = $self->_request(resultset => $self->{resultset}, query =>'-findall&-max=1&-db='.uri_escape_utf8($self->{db})."&-lay=".uri_escape_utf8($layout));
 
 	if($res->is_success)
 	{
-		my $xml = XMLin($res->content);
-		
-		return $xml->{resultset}->{count};
+		my $xml = $self->{xml}->parse($res->content);
+		return $self->_compose_arrayref($xml->simplify);	
 	}
 	else
 	{
@@ -140,3 +168,4 @@ sub total_rows
 
 
 1; # End of Net::FileMaker::XML::Database;
+

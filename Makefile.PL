@@ -15,7 +15,7 @@ WriteMakefile(
         'Test::More'	=> 0,
 	'LWP' 		=> 0,
 	'URI'		=> 0,
-	'XML::Simple'   => "2.18",
+	'XML::Twig'     => "3.33",
     },
 
     MIN_PERL_VERSION => '5.008',
