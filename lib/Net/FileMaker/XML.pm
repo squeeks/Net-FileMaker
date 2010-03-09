@@ -46,6 +46,13 @@ Creates a new object. The specified must be a valid address or host name.
 sub new
 {
 	my($class, %args) = @_;
+
+	# If the protocol isn't specified, let's assume it's just HTTP.
+	if($args{host} !=~/^http/)
+	{
+		$args{host} = 'http://'.$args{host};
+	}
+
 	my $self = {
 		host	  => $args{host},
 		ua 	  => LWP::UserAgent->new,
