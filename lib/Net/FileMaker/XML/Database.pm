@@ -9,7 +9,7 @@ our @ISA = qw(Net::FileMaker::XML);
 
 =head1 NAME
 
-Net::FileMaker::XML::Database;
+Net::FileMaker::XML::Database
 
 =head1 VERSION
 
@@ -28,6 +28,9 @@ This module handles all the tasks with XML data.
     my $db = $fm->database(db => $db, user => $user, pass => $pass);
     
     my $layouts = $db->layoutnames;
+
+
+=head1 METHODS
 
 =cut
 
@@ -103,7 +106,7 @@ sub scriptnames
 }
 
 
-=head2 findall($layout, %options)
+=head2 findall($layout, { options })
 
 Returns all rows on a specific database and layout.
 
