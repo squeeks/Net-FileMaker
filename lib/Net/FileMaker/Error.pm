@@ -16,7 +16,7 @@ Classes within this namespace store the applicable error codes, and the localise
 
 =head1 LANGUAGES SUPPORTED
 
-At present only English is supported, but the eventual goal is to cover all languages presently documented by FileMaker which is over a dozen and includes German, French and Japanese.
+At present only English and Japanese are supported, but the eventual goal is to cover all languages presently documented by FileMaker which is over a dozen and includes German, French and Japanese.
 
 =cut
 
@@ -31,6 +31,7 @@ sub new
 
 	if($args{lang} ne '' && $args{type} ne '')
 	{
+		#TODO: Look at Module::Load instead?
 		my $class   = "Net/FileMaker/Error/".uc($args{lang})."/".uc($args{type}).'.pm';
 		my $package = "Net::FileMaker::Error::".uc($args{lang})."::".uc($args{type});
 		require $class;
