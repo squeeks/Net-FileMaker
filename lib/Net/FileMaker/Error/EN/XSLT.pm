@@ -1,4 +1,4 @@
-package Net::FileMaker::Error::EN::XML;
+package Net::FileMaker::Error::EN::XSLT;
 
 use strict;
 use warnings;
@@ -20,7 +20,7 @@ L<Net::FileMaker::Error>
 my $error_codes = {
 
 	'-1'	=> "Unknown error",
-	0		=> "No error",
+	0	=> "No error",
 	10000	=> "Invalid header name",
 	10001	=> "Invalid HTTP status code",
 	10100	=> "Unknown session error",
