@@ -18,7 +18,7 @@ Version 0.05
 
 =cut
 
-our $VERSION = 0.05;
+our $VERSION = "0.05_02";
 
 =head1 SYNOPSIS
 
@@ -68,6 +68,10 @@ As all of the current structure is confied to the XML base, see L<Net::FileMaker
 =head1 AUTHOR
 
 Squeeks, C<< <squeek at cpan.org> >>
+
+=head1 CONTRIBUTORS
+
+Simon Cozens, C<<simon at cpan.org>>
 
 =head1 BUGS
 
