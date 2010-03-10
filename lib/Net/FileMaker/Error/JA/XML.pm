@@ -7,15 +7,11 @@ use warnings;
 
 =head1 NAME
 
-Net::FileMaker::Error::JA::XML - FileMaker ServerのXMLインターフェイスの日本語エラー文字列
-
-Error stringsfor FileMaker Server XML interface in Japanese.
+Net::FileMaker::Error::JA::XML - FileMaker Server XMLインタフェーイスの日本語エラー文字列
 
 =head1 INFO
 
-エラーコードはこのもジュール知られて、FileMaker XML/XSLTのドキュメンテーションから取り出され、FileMaker Server 10の有効表示されます。
-
-The error codes supported by this module were plucked from the FileMaker documentation on XML/XSLT, and appear valid for FileMaker Server 10.
+このモジュールがサポートするエラーコードがFileMaker XML/XSLTのドキュメンテーションから抜き出され、FileMaker Server 10に有効でありそうです。
 
 =head1 SEE ALSO
 
