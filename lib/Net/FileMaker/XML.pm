@@ -48,7 +48,7 @@ sub new
 	my($class, %args) = @_;
 
 	# If the protocol isn't specified, let's assume it's just HTTP.
-	if($args{host} !=~/^http/)
+	if($args{host} !~/^http/)
 	{
 		$args{host} = 'http://'.$args{host};
 	}
