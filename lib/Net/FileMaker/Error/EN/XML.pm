@@ -9,7 +9,7 @@ Net::FileMaker::Error::EN::XML - Error strings for FileMaker Server XML interfac
 
 =head1 INFO
 
-The error codes supported by this module were plucked from the FileMaker documentation on XML/XLST, and appear valid for FileMaker Server 10.
+The error codes supported by this module were plucked from the FileMaker documentation on XML/XSLT, and appear valid for FileMaker Server 10.
 
 =head1 SEE ALSO
 
