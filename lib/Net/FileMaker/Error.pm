@@ -31,9 +31,11 @@ sub new
 
 	if($args{lang} ne '' && $args{type} ne '')
 	{
-		my $class = "Net::FileMaker::Error::".uc($args{lang})."::".uc($args{type});
+		my $class   = "Net/FileMaker/Error/".uc($args{lang})."/".uc($args{type}).'.pm';
+		my $package = "Net::FileMaker::Error::".uc($args{lang})."::".uc($args{type});
+		require $class;
 		#TODO: try/catch if the sub class exists?
-		return $class->new;
+		return $package->new;
 	}
 	else
 	{
