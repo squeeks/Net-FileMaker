@@ -57,7 +57,8 @@ sub new
 		host	  => $args{host},
 		ua 	  => LWP::UserAgent->new,
 		xml	  => XML::Twig->new,
-		resultset => '/fmi/xml/fmresultset.xml?', # Entirely for dbnames();
+		uri	  => URI->new($args{host}),
+		resultset => '/fmi/xml/fmresultset.xml', # Entirely for dbnames();
 	};
 
 	return bless $self;
@@ -112,7 +113,7 @@ sub dbnames
 
 
 
-# _request(query => $query, resultset => $resultset, user => $user, pass => $pass)
+# _request(query => $query, params => $params, resultset => $resultset, user => $user, pass => $pass)
 #
 # Performs a request to the FileMaker Server. The query and resultset keys are mandatory, 
 # however user and pass keys are not. The query should always be URI encoded.
@@ -120,10 +121,13 @@ sub _request
 {
 	my ($self, %args) = @_;
 
-	# Everything in %args should be uri encoded.
-	my $url = $self->{host}.$args{resultset}.$args{query};
+	# Construct the URI
+	my $uri = $self->{uri}->clone;
+	$uri->path($args{resultset});
+	$uri->query($args{query});
+	$uri->query_form(%{$args{query_form}}) if ($args{query_form});
 
-	my $req = HTTP::Request->new(GET => $url);
+	my $req = HTTP::Request->new(GET => $uri->as_string);
 
 	if($args{user} && $args{pass})
 	{
