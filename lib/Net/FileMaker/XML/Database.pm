@@ -11,13 +11,7 @@ our @ISA = qw(Net::FileMaker::XML);
 
 Net::FileMaker::XML::Database
 
-=head1 VERSION
-
-Version 0.05
-
 =cut
-
-our $VERSION = 0.05;
 
 =head1 SYNOPSIS
 
@@ -28,6 +22,7 @@ This module handles all the tasks with XML data.
     my $db = $fm->database(db => $db, user => $user, pass => $pass);
     
     my $layouts = $db->layoutnames;
+    my $scripts = $db->scriptnames;
 
 
 =head1 METHODS
@@ -45,13 +40,15 @@ sub new
 		pass      => $args{pass},
 		resultset => '/fmi/xml/fmresultset.xml?',
                 ua        => LWP::UserAgent->new,
-                xml       => XML::Twig->new
+                xml       => XML::Twig->new,
+		uri	  => URI->new($args{host})
+		
 	};
 
 	return bless $self;
 }
 
-=head2 layoutnames
+=head2 layoutnames($database)
 
 Returns an arrayref containing layouts accessible for the respective database.
 
@@ -60,12 +57,14 @@ Returns an arrayref containing layouts accessible for the respective database.
 sub layoutnames
 {
 	my $self = shift;
-	my $res = $self->_request(
-		user 	  => $self->{user},
-		pass 	  => $self->{pass},
-		resultset => $self->{resultset},
-		query 	  =>'-db='.uri_escape_utf8($self->{db}).'&-layoutnames'
-	);
+        my $res = $self->_request(
+                user      => $self->{user},
+                pass      => $self->{pass},
+                resultset => $self->{resultset},
+                query     => '-layoutnames',
+                params    => { '-db' => $self->{db} }
+        );   
+
 
 	if($res->is_success)
 	{
@@ -78,7 +77,7 @@ sub layoutnames
 	}
 }
 
-=head2 scriptnames
+=head2 scriptnames($database)
 
 Returns an arrayref containing scripts accessible for the respective database.
 
@@ -87,12 +86,14 @@ Returns an arrayref containing scripts accessible for the respective database.
 sub scriptnames
 {
 	my $self = shift;
-	my $res = $self->_request(
-		user	  => $self->{user},
-		pass 	  => $self->{pass},
-		resultset => $self->{resultset},
-		query 	  =>'-db='.uri_escape_utf8($self->{db}).'&-scriptnames'
-	);
+        my $res = $self->_request(
+                user      => $self->{user},
+                pass      => $self->{pass},
+                resultset => $self->{resultset},
+                query     => '-scriptnames',
+                params    => { '-db' => $self->{db} }
+        );   
+
 
 	if($res->is_success)
 	{

@@ -15,7 +15,7 @@ Version 0.05
 
 =cut
 
-our $VERSION = 0.05;
+our $VERSION = "0.05_02";
 
 =head1 SYNOPSIS
 
@@ -119,24 +119,34 @@ sub dbnames
 # however user and pass keys are not. The query should always be URI encoded.
 sub _request
 {
-	my ($self, %args) = @_;
+        my ($self, %args) = @_;
 
-	# Construct the URI
-	my $uri = $self->{uri}->clone;
-	$uri->path($args{resultset});
-	$uri->query($args{query});
-	$uri->query_form(%{$args{query_form}}) if ($args{query_form});
-
-	my $req = HTTP::Request->new(GET => $uri->as_string);
-
-	if($args{user} && $args{pass})
+        # Construct the URI
+        my $uri = $self->{uri}->clone;
+        $uri->path($args{resultset});
+        
+        my $url;
+	# This kind of defeats the purpose of using URI to begin with,
+        if($args{params})
 	{
-		$req->authorization_basic( $args{user}, $args{pass});
-	}
+                $uri->query_form(%{$args{params}});
+                $url = $uri->as_string."&".$args{query};
+        }
+        else
+        {
+           $url = $uri->as_string."?".$args{query};
+        }
 
-	my $res = $self->{ua}->request($req);
+        my $req = HTTP::Request->new(GET => $url);
 
-	return $res;
+        if($args{user} && $args{pass})
+        {       
+                $req->authorization_basic( $args{user}, $args{pass});
+        }       
+
+        my $res = $self->{ua}->request($req);
+
+        return $res;
 
 }
 
