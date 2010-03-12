@@ -8,15 +8,14 @@ use URI::Escape;
 our @ISA = qw(Net::FileMaker::XML);
 
 #
-# Particular methods have specific parameters that are either expected or optional. 
-# This list comprises of each supported.
+# Particular methods have specific parameters that are optional, but need to be validated to mitigate sending
+# bad parameters to the server.
 my $acceptable_params = {
-	'findall' => 'recid|lop|op|max|skip|sortorder|sortfield|script|script\.prefind|script\.presort',
-	'findany' => '',
-	'findquery' => '',
-	'delete' => 'db|lay|recid|script',
-	'dup' => 'db|lay|recid|script',
-	'edit' => 'db|lay|recid|modid|script',
+	'findall' => '-recid|-lop|-op|-max|-skip|-sortorder|-sortfield|-script|-script\.prefind|-script\.presort',
+	'findany' => '-recid|-lop|-op|-max|-skip|-sortorder|-sortfield|-script|-script\.prefind|-script\.presort',
+	'delete'  => 'db|lay|recid|script',
+	'dup'     => 'db|lay|recid|script',
+	'edit'    => 'db|lay|recid|modid|script',
 };
 
 =head1 NAME
@@ -172,6 +171,61 @@ sub findall
 	};
 
 }
+
+=head2 findany(layout => $layout, params => { parameters }, nocheck => 1)
+
+Returns a random hashref of rows on a specific database and layout.
+
+nocheck is an optional argument that will skip checking of parameters if set to 1.
+
+=cut
+
+sub findany
+{
+	my ($self, %args) = @_;
+
+	my $params = { 
+		'-lay' => $args{layout},
+		'-db'  => $self->{db}
+	};
+
+	if($args{params} && ref($args{params}) eq 'HASH')
+	{
+		for my $param(keys %{$args{params}})
+		{
+			# Perform or skip parameter checking
+			if($args{nocheck} && $args{nocheck} == 1)
+			{
+				$params->{$param} = $args{params}->{$param};
+			}
+			else
+			{
+				$params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{findall});
+			}
+		}
+	}
+
+	my $res = $self->_request(
+			resultset => $self->{resultset}, 
+			user 	  => $self->{user}, 
+			pass 	  => $self->{pass}, 
+			query	  => '-findany',
+			params    => $params
+	);
+
+	if($res->is_success)
+	{
+		my $xml = $self->{xml}->parse($res->content);
+		my $xml_data = $xml->simplify;
+		return $xml_data->{resultset}->{record};
+	}
+	else
+	{
+		return $res;
+	};
+
+}
+
 
 =head2 total_rows($database, $layout)
 

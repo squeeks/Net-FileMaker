@@ -10,5 +10,7 @@ t/01_xml/00-load.t
 t/01_xml/01-dbnames.t
 t/01_xml/02-layoutnames.t
 t/01_xml/03-scriptnames.t
+t/01_xml/04-findall.t
+t/01_xml/05-findany.t
 t/manifest.t
 t/pod.t
