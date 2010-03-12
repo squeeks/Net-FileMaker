@@ -7,6 +7,18 @@ use URI::Escape;
 
 our @ISA = qw(Net::FileMaker::XML);
 
+#
+# Particular methods have specific parameters that are either expected or optional. 
+# This list comprises of each supported.
+my $acceptable_params = {
+	'findall' => 'recid|lop|op|max|skip|sortorder|sortfield|script|script\.prefind|script\.presort',
+	'findany' => '',
+	'findquery' => '',
+	'delete' => 'db|lay|recid|script',
+	'dup' => 'db|lay|recid|script',
+	'edit' => 'db|lay|recid|modid|script',
+};
+
 =head1 NAME
 
 Net::FileMaker::XML::Database
@@ -38,7 +50,7 @@ sub new
 		db        => $args{db},
 		user      => $args{user},
 		pass      => $args{pass},
-		resultset => '/fmi/xml/fmresultset.xml?',
+		resultset => '/fmi/xml/fmresultset.xml',
                 ua        => LWP::UserAgent->new,
                 xml       => XML::Twig->new,
 		uri	  => URI->new($args{host})
@@ -48,7 +60,7 @@ sub new
 	return bless $self;
 }
 
-=head2 layoutnames($database)
+=head2 layoutnames
 
 Returns an arrayref containing layouts accessible for the respective database.
 
@@ -77,7 +89,7 @@ sub layoutnames
 	}
 }
 
-=head2 scriptnames($database)
+=head2 scriptnames
 
 Returns an arrayref containing scripts accessible for the respective database.
 
@@ -107,35 +119,45 @@ sub scriptnames
 }
 
 
-=head2 findall($layout, { options })
+=head2 findall(layout => $layout, params => { parameters }, nocheck => 1)
 
 Returns all rows on a specific database and layout.
+
+nocheck is an optional argument that will skip checking of parameters if set to 1.
 
 =cut
 
 sub findall
 {
-	my ($self, $layout, $args) = @_;
+	my ($self, %args) = @_;
 
-	my $url;
+	my $params = { 
+		'-lay' => $args{layout},
+		'-db'  => $self->{db}
+	};
 
-	# Keys are just actual URL vars from the API minus the prefixing dash.
-	# According to the documentation, that means all the options are:
-	# –recid, –lop, –op, –max, –skip, –sortorder, –sortfield, –script, –script.prefind, –script.presort
-
-	#TODO: Validations done on the applicable params so we don't spew junk to the server.
-	for my $var (keys %{$args})
-	{	
-		$url .= sprintf('-%s=%s&', uri_escape_utf8($var), uri_escape_utf8($args->{$var}));
+	if($args{params} && ref($args{params}) eq 'HASH')
+	{
+		for my $param(keys %{$args{params}})
+		{
+			# Perform or skip parameter checking
+			if($args{nocheck} && $args{nocheck} == 1)
+			{
+				$params->{$param} = $args{params}->{$param};
+			}
+			else
+			{
+				$params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{findall});
+			}
+		}
 	}
-
-        $url .= '-findall&-db=' . uri_escape_utf8($self->{db}) . '&-lay=' . $layout;
 
 	my $res = $self->_request(
 			resultset => $self->{resultset}, 
 			user 	  => $self->{user}, 
 			pass 	  => $self->{pass}, 
-			query	  => $url
+			query	  => '-findall',
+			params    => $params
 	);
 
 	if($res->is_success)
@@ -147,7 +169,7 @@ sub findall
 	else
 	{
 		return $res;
-	}2
+	};
 
 }
 

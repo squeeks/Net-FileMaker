@@ -111,7 +111,11 @@ sub dbnames
 
 }
 
+=head1 SEE ALSO
 
+L<Net::FileMaker::XML::Database>
+
+=cut
 
 # _request(query => $query, params => $params, resultset => $resultset, user => $user, pass => $pass)
 #
@@ -213,10 +217,29 @@ sub _compose_arrayref
 
 }
 
-=head1 SEE ALSO
 
-L<Net::FileMaker::XML::Database>
+# _assert_param()
+#
+# Optional parameters sometimes validation to ensure they are correct.
+# Warnings are issued if a parameter name is somehow invalid.
+sub _assert_param
+{
+	my($self, $unclean_param, $acceptable_params) = @_;
+	my $param;
 
-=cut
+	if($unclean_param =~/$acceptable_params/)
+	{
+		$param = $unclean_param;
+	}
+	else
+	{
+		# TODO: Localise this error message
+		warn "Invalid parameter specified - $unclean_param";
+	}
+
+
+	return $param;
+}
+
 
 1; # End of Net::FileMaker::XML;
