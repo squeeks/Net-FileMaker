@@ -7,11 +7,11 @@ use warnings;
 
 =head1 NAME
 
-Net::FileMaker::Error::DE::XML - Error strings for FileMaker Server XML interface in German.
+Net::FileMaker::Error::DE::XML - Fehlermeldungen für das FileMaker Server XML-Interface in Deutsch.
 
 =head1 INFO
 
-The error codes supported by this module were plucked from the FileMaker documentation on XML/XSLT, and appear valid for FileMaker Server 10.
+Die Fehler-Codes, die von diesem Modul unterstützt werden, wurden der FileMaker-Dokumentation für XML/XSLT entnommen und scheinen für FileMaker Server 10 gültig zu sein.
 
 =head1 SEE ALSO
 
