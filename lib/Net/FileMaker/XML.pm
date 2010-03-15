@@ -15,7 +15,7 @@ Version 0.05
 
 =cut
 
-our $VERSION = "0.05_02";
+our $VERSION = '0.05_02';
 
 =head1 SYNOPSIS
 
@@ -94,20 +94,12 @@ Lists all XML/XSLT enabled databases for a given host. This method requires no a
 sub dbnames
 {
 	my $self = shift;
-	my $res  = $self->_request(
+	my $xml  = $self->_request(
 			resultset => $self->{resultset}, 
 			query	  =>'-dbnames'
 	);
 
-	if($res->is_success)
-	{
-		my $xml = $self->{xml}->parse($res->content);
-		return $self->_compose_arrayref('DATABASE_NAME', $xml->simplify);
-	}
-	else
-	{
-		return undef;
-	}
+	return $self->_compose_arrayref('DATABASE_NAME', $xml);
 
 }
 
@@ -130,7 +122,8 @@ sub _request
         $uri->path($args{resultset});
         
         my $url;
-	# This kind of defeats the purpose of using URI to begin with,
+	# This kind of defeats the purpose of using URI to begin with, but this fault has been reported
+	# on rt.cpan.org for over 2 years and many releases with no fix.
         if($args{params})
 	{
                 $uri->query_form(%{$args{params}});
@@ -150,42 +143,16 @@ sub _request
 
         my $res = $self->{ua}->request($req);
 
-        return $res;
+	my $xml = $self->{xml}->parse($res->content);
+	my $xml_data = $xml->simplify;
 
-}
-
-# _request_xml(query => $query, resultset => $resultset, user => $user, pass => $pass)
-#
-# Performs the same as _request, except will load and parse the XML itself. Returns a
-# hashref containing the parsed XML on success.
-sub _request_xml
-{
-	my($self, %args) = @_;
-
-	my $url = $self->{host}.$self->{resultset}.$args{query};
-
-	my $req = HTTP::Request->new(GET => $url);
-
-	if($args{user} && $args{pass})
+	# Inject localised error message
+	if($xml_data->{error}->{code} ne '0' && $self->{error})
 	{
-		$req->authorization_basic( $args{user}, $args{pass});
+		$xml_data->{error}->{message} = $self->{error}->get_string($xml_data->{error}->{code});
 	}
 
-	my $res = $self->{ua}->request($req);
-
-	if($res->is_success)
-	{
-		my $xml = XMLin($res->content);
-		#TODO: Error Handling.
-		return $xml;
-	}
-	else
-	{
-		# Shouldn't really return undef, rather...
-		# TODO: Incorporate the HTTP error codes into the response so
-		# N::F::Error::HTTP can deal with it.
-		return undef;
-	}
+        return $xml_data;
 
 }
 
