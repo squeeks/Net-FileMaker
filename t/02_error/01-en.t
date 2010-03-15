@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 7;
 
 use_ok('Net::FileMaker::Error');
 
@@ -30,7 +30,3 @@ is($xslt_error_10205, 'Message “CC Field” error', 'Returned error string');
 
 my $xslt_error_minusone = $xslt->get_string('-1');
 is($xslt_error_minusone, 'Unknown error', 'Returned error string on -1');
-
-
-
-done_testing();
