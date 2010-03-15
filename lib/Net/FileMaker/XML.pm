@@ -3,6 +3,8 @@ package Net::FileMaker::XML;
 use strict;
 use warnings;
 
+use Net::FileMaker::Error;
+
 use XML::Twig;
 
 =head1 NAME
@@ -11,11 +13,11 @@ Net::FileMaker::XML - Interact with FileMaker Server's XML Interface.
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =cut
 
-our $VERSION = '0.05_02';
+our $VERSION = 0.06;
 
 =head1 SYNOPSIS
 
@@ -29,10 +31,13 @@ key in the constructor as "xml":
     my $fms = Net::FileMaker->new(host => $host, type => 'xml');
 
 It's also possible to call this module directly:
-    
+
+    use Net::FileMaker::XML;
+
     my $fms = Net::FileMaker::XML->new(host => $host);
+
     my $dbnames = $fms->dbnames;
-    my $fmdb = $fms->database();
+    my $fmdb = $fms->database(db => $db, user => $user, pass => $pass);
 
 
 =head1 METHODS
@@ -61,6 +66,11 @@ sub new
 		resultset => '/fmi/xml/fmresultset.xml', # Entirely for dbnames();
 	};
 
+	if($args{error})
+	{
+		$self->{error} = Net::FileMaker::Error->new(lang => $args{error}, type => 'XML');
+	}
+
 	return bless $self;
 
 }
@@ -77,17 +87,17 @@ sub database
 
 	require Net::FileMaker::XML::Database;
 	return  Net::FileMaker::XML::Database->new(
-			host => $self->{host},
-			db   => $args{db},
-			user => $args{user} || '',
-			pass => $args{pass} || ''
+			host  => $self->{host},
+			db    => $args{db},
+			user  => $args{user} || '',
+			pass  => $args{pass} || ''
 		);
 }
 
 
 =head2 dbnames
 
-Lists all XML/XSLT enabled databases for a given host. This method requires no authentication.
+Returns an arrayref containing all XML/XSLT enabled databases for a given host. This method requires no authentication.
 
 =cut
 
@@ -102,6 +112,12 @@ sub dbnames
 	return $self->_compose_arrayref('DATABASE_NAME', $xml);
 
 }
+
+=head1 COMPATIBILITY
+
+This distrobution is tested against FileMaker Advanced Server 10.0.1.59 and shortly testing will commence against version 11. 
+Older versions are not tested at present, but feedback is welcome. See the messages present in the test suite on how to setup 
+tests against your server.
 
 =head1 SEE ALSO
 
@@ -147,7 +163,7 @@ sub _request
 	my $xml_data = $xml->simplify;
 
 	# Inject localised error message
-	if($xml_data->{error}->{code} ne '0' && $self->{error})
+	if($self->{error})
 	{
 		$xml_data->{error}->{message} = $self->{error}->get_string($xml_data->{error}->{code});
 	}

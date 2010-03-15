@@ -24,15 +24,16 @@ Net::FileMaker::XML::Database
 
 =head1 SYNOPSIS
 
-This module handles all the tasks with XML data.
+This module handles all the tasks with XML data. Don't call this module directly, instead use L<Net::FileMaker::XML>.
 
     use Net::FileMaker::XML;
-    my $fm = Net::FileMaker::XML->new();
+    my $fm = Net::FileMaker::XML->new(host => $host);
     my $db = $fm->database(db => $db, user => $user, pass => $pass);
     
     my $layouts = $db->layoutnames;
     my $scripts = $db->scriptnames;
-
+    my $records = $db->findall( layout => $layout, params => { '-max' => '10'});
+    my $records = $db->findany( layout => $layout, params => { '-skip' => '10'});
 
 =head1 METHODS
 
@@ -50,8 +51,7 @@ sub new
 		resultset => '/fmi/xml/fmresultset.xml',
                 ua        => LWP::UserAgent->new,
                 xml       => XML::Twig->new,
-		uri	  => URI->new($args{host})
-		
+		uri	  => URI->new($args{host}),	
 	};
 
 	return bless $self;
@@ -101,7 +101,7 @@ sub scriptnames
 
 =head2 find(layout => $layout, params => { parameters })
 
-Returns a random hashref of rows on a specific database and layout.
+Returns a hashref of rows on a specific database and layout.
 
 =cut
 
@@ -122,9 +122,6 @@ sub find
 
 	return $xml;
 }
-
-
-
 
 
 =head2 findall(layout => $layout, params => { parameters }, nocheck => 1)
@@ -173,7 +170,7 @@ sub findall
 
 =head2 findany(layout => $layout, params => { parameters }, nocheck => 1)
 
-Returns a random hashref of rows on a specific database and layout.
+Returns a hashref of random rows on a specific database and layout.
 
 nocheck is an optional argument that will skip checking of parameters if set to 1.
 
@@ -215,7 +212,7 @@ sub findany
 	return $xml;
 }
 
-=head2 total_rows($database, $layout)
+=head2 total_rows(layout => $layout)
 
 Returns a scalar with the total rows for a given layout.
 
@@ -223,12 +220,12 @@ Returns a scalar with the total rows for a given layout.
 
 sub total_rows
 {
-	my($self, $layout) = @_;
+	my($self, %args) = @_;
 
 	# Just do a findall with 1 record and parse the result. This might break on an empty database.
 	my $xml = $self->_request(
 		resultset => $self->{resultset},
-		params    => {'-db' => $self->{db}, '-lay' => $layout, '-max' => '1' },
+		params    => {'-db' => $self->{db}, '-lay' => $args{layout}, '-max' => '1' },
 		query 	  => '-findall'
 	);
 

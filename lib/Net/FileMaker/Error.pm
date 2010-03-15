@@ -9,18 +9,18 @@ Net::FileMaker::Error - Error strings and codes
 
 =head1 SYNOPSIS
 
-Classes within this namespace store the applicable error codes, and the localised strings for them. You don't need to call these modules yourself directly. To enable them, the key "error" must be defined as an ISO 639 short code when you construct your objects with L<Net::FileMaker> or a subclass that handles individual interface types like so:
+Classes within this namespace store the applicable error codes, and the localised strings for them. You don't call these modules yourself directly. To enable them, the key "error" must be defined as an ISO 639 short code when you construct your objects with L<Net::FileMaker> or a subclass that handles individual interface types like so:
 
     use Net::FileMaker;
     my $fms = Net::FileMaker->new(host => $host, error => 'en');
 
 =head1 LANGUAGES SUPPORTED
 
-At present only English and Japanese are supported, but the eventual goal is to cover all languages presently documented by FileMaker which is over a dozen and includes German, French and Japanese.
+English, Japanese and German are presently supported with the aims of covering all languages documented by FileMaker in the future.
 
 =cut
 
-# new( lang => $lang, type => $type
+# new( lang => $lang, type => $type)
 #
 # Creates a new object. There is no inheritance in the Error classes, mearly factory objects.
 # Both the language (in ISO 639) and type (XML/XSLT/IWP etc) needs be defined. Returns undef if
