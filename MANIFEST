@@ -5,6 +5,12 @@ README
 lib/Net/FileMaker.pm
 lib/Net/FileMaker/XML.pm
 lib/Net/FileMaker/XML/Database.pm
+lib/Net/FileMaker/Error.pm
+lib/Net/FileMaker/Error/EN/XML.pm
+lib/Net/FileMaker/Error/EN/XSLT.pm
+lib/Net/FileMaker/Error/JA/XML.pm
+lib/Net/FileMaker/Error/JA/XSLT.pm
+lib/Net/FileMaker/Error/DE/XML.pm
 t/00_load/00-net-filemaker.t
 t/01_xml/00-load.t
 t/01_xml/01-dbnames.t
@@ -12,5 +18,8 @@ t/01_xml/02-layoutnames.t
 t/01_xml/03-scriptnames.t
 t/01_xml/04-findall.t
 t/01_xml/05-findany.t
+t/02_error/00-load.t
+t/02_error/01-en.t
+t/02_error/02-ja.t
 t/manifest.t
 t/pod.t

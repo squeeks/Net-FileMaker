@@ -1,6 +1,10 @@
 Revision history for Net::FileMaker
 
-0.06	2010-03-04
+0.06	2010-03-15
+	+ Localised Error strings in English, Japanese and German
+	+ Huge amounts of boilerplate removed
+
+0.05	2010-03-04
 	+ Significant changes to the entire structure of the distrobution, and as such the interface has also changed,
 	So please check the documentation.
 	+ XML::Simple has been dropped for XML::Twig
