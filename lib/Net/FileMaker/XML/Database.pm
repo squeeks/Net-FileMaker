@@ -3,8 +3,6 @@ package Net::FileMaker::XML::Database;
 use strict;
 use warnings;
 
-use URI::Escape;
-
 our @ISA = qw(Net::FileMaker::XML);
 
 #
@@ -68,7 +66,7 @@ Returns an arrayref containing layouts accessible for the respective database.
 sub layoutnames
 {
 	my $self = shift;
-        my $res = $self->_request(
+        my $xml = $self->_request(
                 user      => $self->{user},
                 pass      => $self->{pass},
                 resultset => $self->{resultset},
@@ -77,15 +75,7 @@ sub layoutnames
         );   
 
 
-	if($res->is_success)
-	{
-		my $xml = $self->{xml}->parse($res->content);
-		return $self->_compose_arrayref('LAYOUT_NAME', $xml->simplify);
-	}
-	else
-	{
-		return undef;
-	}
+	return $self->_compose_arrayref('LAYOUT_NAME', $xml);
 }
 
 =head2 scriptnames
@@ -97,7 +87,7 @@ Returns an arrayref containing scripts accessible for the respective database.
 sub scriptnames
 {
 	my $self = shift;
-        my $res = $self->_request(
+        my $xml = $self->_request(
                 user      => $self->{user},
                 pass      => $self->{pass},
                 resultset => $self->{resultset},
@@ -106,16 +96,35 @@ sub scriptnames
         );   
 
 
-	if($res->is_success)
-	{
-		my $xml = $self->{xml}->parse($res->content);
-		return $self->_compose_arrayref('SCRIPT_NAME', $xml->simplify);
-	}
-	else
-	{
-		return undef;
-	}
+	return $self->_compose_arrayref('SCRIPT_NAME', $xml);
 }
+
+=head2 find(layout => $layout, params => { parameters })
+
+Returns a random hashref of rows on a specific database and layout.
+
+=cut
+
+sub find
+{
+	my ($self, %args) = @_;
+
+	$args{params}->{'-lay'} = $args{layout};
+	$args{params}->{'-db'}  = $self->{db};
+	
+	my $xml = $self->_request(
+			resultset => $self->{resultset}, 
+			user 	  => $self->{user}, 
+			pass 	  => $self->{pass}, 
+			query	  => '-find',
+			params    => $args{params}
+	);
+
+	return $xml;
+}
+
+
+
 
 
 =head2 findall(layout => $layout, params => { parameters }, nocheck => 1)
@@ -151,7 +160,7 @@ sub findall
 		}
 	}
 
-	my $res = $self->_request(
+	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
 			user 	  => $self->{user}, 
 			pass 	  => $self->{pass}, 
@@ -159,17 +168,7 @@ sub findall
 			params    => $params
 	);
 
-	if($res->is_success)
-	{
-		my $xml = $self->{xml}->parse($res->content);
-		my $xml_data = $xml->simplify;
-		return $xml_data->{resultset}->{record};
-	}
-	else
-	{
-		return $res;
-	};
-
+	return $xml;
 }
 
 =head2 findany(layout => $layout, params => { parameters }, nocheck => 1)
@@ -205,7 +204,7 @@ sub findany
 		}
 	}
 
-	my $res = $self->_request(
+	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
 			user 	  => $self->{user}, 
 			pass 	  => $self->{pass}, 
@@ -213,23 +212,12 @@ sub findany
 			params    => $params
 	);
 
-	if($res->is_success)
-	{
-		my $xml = $self->{xml}->parse($res->content);
-		my $xml_data = $xml->simplify;
-		return $xml_data->{resultset}->{record};
-	}
-	else
-	{
-		return $res;
-	};
-
+	return $xml;
 }
-
 
 =head2 total_rows($database, $layout)
 
-Returns a scalar with the total rows for a given database and layout.
+Returns a scalar with the total rows for a given layout.
 
 =cut
 
@@ -238,21 +226,13 @@ sub total_rows
 	my($self, $layout) = @_;
 
 	# Just do a findall with 1 record and parse the result. This might break on an empty database.
-	my $res = $self->_request(
-		resultset => $self->{resultset}, 
-		query 	  =>'-findall&-max=1&-db='.uri_escape_utf8($self->{db})."&-lay=".uri_escape_utf8($layout)
+	my $xml = $self->_request(
+		resultset => $self->{resultset},
+		params    => {'-db' => $self->{db}, '-lay' => $layout, '-max' => '1' },
+		query 	  => '-findall'
 	);
 
-	if($res->is_success)
-	{
-		my $xml = $self->{xml}->parse($res->content);
-		my $xml_data = $xml->simplify;
-		return $xml_data->{resultset}->{count};
-	}
-	else
-	{
-		return undef;
-	}
+	return $xml;
 }
 
 
