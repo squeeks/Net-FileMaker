@@ -13,11 +13,11 @@ Net::FileMaker::XML - Interact with FileMaker Server's XML Interface.
 
 =head1 VERSION
 
-Version 0.06
+Version 0.062
 
 =cut
 
-our $VERSION = 0.06;
+our $VERSION = 0.062;
 
 =head1 SYNOPSIS
 

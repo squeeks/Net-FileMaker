@@ -1,4 +1,7 @@
 Revision history for Net::FileMaker
+0.062	2010-04-07
+	+ Minor Bugfixes
+	+ Enhancements to the test suite
 
 0.06	2010-03-15
 	+ Localised Error strings in English, Japanese and German

@@ -20,7 +20,13 @@ my $acceptable_params = {
 
 Net::FileMaker::XML::Database
 
+=head1 VERSION
+
+Version 0.062
+
 =cut
+
+our $VERSION = 0.062;
 
 =head1 SYNOPSIS
 
