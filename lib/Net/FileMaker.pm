@@ -8,6 +8,8 @@ use 5.008;
 use LWP::UserAgent;
 use URI;
 
+=encoding utf8
+
 =head1 NAME
 
 Net::FileMaker - Interact with FileMaker services
