@@ -184,7 +184,7 @@ sub _compose_arrayref
 
 	if(ref($xml->{resultset}->{record}) eq 'HASH')
 	{
-		return $xml->{resultset}->{record}->{field}->{data};
+		return $xml->{resultset}->{record}->{field}->{$fieldname}->{data};
 	}
 	elsif(ref($xml->{resultset}->{record}) eq 'ARRAY')
 	{
