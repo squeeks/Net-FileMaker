@@ -115,7 +115,7 @@ sub dbnames
 
 =head1 COMPATIBILITY
 
-This distrobution is tested against FileMaker Advanced Server 10.0.1.59 and shortly testing will commence against version 11. 
+This distrobution is actively tested against FileMaker Advanced Server 10.0.1.59 and 11.0.1.95. 
 Older versions are not tested at present, but feedback is welcome. See the messages present in the test suite on how to setup 
 tests against your server.
 
