@@ -96,6 +96,8 @@ sub fields_definition
 
 =head2 datasource
 
+returns
+
 =item * 'database' 			# database file name
 =item * 'layout' 			# kind of layout, eg. 'List'
 =item * 'timestamp-format' 	# eg. 'MM/dd/yyyy HH:mm:ss',
@@ -106,7 +108,7 @@ sub fields_definition
 
 =cut
 
-sub fields_definition
+sub datasource
 {
 	my $self = shift;
 	return $self->{_field_def}->fields;

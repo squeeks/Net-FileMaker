@@ -45,16 +45,7 @@ sub new
 	my($class, $res_hash) = @_;
     
 	my $self = {
-		_res_hash      => $res_hash, 
-		global 			=> undef,
-		numeric_only 	=> undef,
-		four_digit_year => undef,
-		not_empty 		=> undef,
-		auto_enter 		=> undef,
-		type 			=> undef,
-		time_of_day 	=> undef,
-		max_repeat  	=> undef,
-		result		 	=> undef		
+		_res_hash      => $res_hash		
 	};
 	bless $self;
 	$self->_parse;
@@ -82,16 +73,16 @@ sub new
 sub _parse
 {
 	my $self = shift;
-	$self->{global} 		= $self->{_res_hash}{global} eq 'no' ? 0 : 1				if defined $self->{_res_hash}{global} ;
-	$self->{numeric_only} 	= $self->{_res_hash}{'numeric-only'} eq 'no' ? 0 : 1 		if defined $self->{_res_hash}{'numeric-only'};
-	$self->{four_digit_year} = $self->{_res_hash}{'four-digit-year'} eq 'no' ? 0 : 1	if defined $self->{_res_hash}{'four-digit-year'};
-	$self->{not_empty} 		= $self->{_res_hash}{'not-empty'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'not-empty'};
-	$self->{auto_enter} 	= $self->{_res_hash}{'auto-enter'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'auto-enter'};
-	$self->{type} 			= $self->{_res_hash}{type}									if defined $self->{_res_hash}{type};
-	$self->{time_of_day} 	= $self->{_res_hash}{'time-of-day'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'time-of-day'};
-	$self->{max_repeat} 	= $self->{_res_hash}{'max-repeat'}							if defined $self->{_res_hash}{'max-repeat'};
-	$self->{max_characters}	= $self->{_res_hash}{'max-characters'}						if defined $self->{_res_hash}{'max-characters'};	
-	$self->{result} 		= $self->{_res_hash}{result}								if defined $self->{_res_hash}{result};
+	$self->{global} 			= $self->{_res_hash}{global} eq 'no' ? 0 : 1				if defined $self->{_res_hash}{global} ;
+	$self->{'numeric-only'} 	= $self->{_res_hash}{'numeric-only'} eq 'no' ? 0 : 1 		if defined $self->{_res_hash}{'numeric-only'};
+	$self->{'four-digit-year'} 	= $self->{_res_hash}{'four-digit-year'} eq 'no' ? 0 : 1		if defined $self->{_res_hash}{'four-digit-year'};
+	$self->{'not-empty'} 		= $self->{_res_hash}{'not-empty'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'not-empty'};
+	$self->{'auto-enter'} 		= $self->{_res_hash}{'auto-enter'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'auto-enter'};
+	$self->{type} 				= $self->{_res_hash}{type}									if defined $self->{_res_hash}{type};
+	$self->{'time-of-day'} 		= $self->{_res_hash}{'time-of-day'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'time-of-day'};
+	$self->{'max-repeat'} 		= $self->{_res_hash}{'max-repeat'}							if defined $self->{_res_hash}{'max-repeat'};
+	$self->{'max-characters'}	= $self->{_res_hash}{'max-characters'}						if defined $self->{_res_hash}{'max-characters'};	
+	$self->{result} 			= $self->{_res_hash}{result}								if defined $self->{_res_hash}{result};
 }
 
 =head2 get('field')
@@ -102,19 +93,19 @@ the accepted params are ( possible results in parentheses ):
 =over 4
 
 =item * global (0,1)
-=item * numeric_only (0,1)
-=item * four_digit_year (0,1)
-=item * not_empty (0,1)
+=item * numeric-only (0,1)
+=item * four-digit-year (0,1)
+=item * not-empty (0,1)
 =item * auto_enter (0,1)
 =item * type (“normal”, “calculation”, or “summary”)
-=item * time_of_day (0,1)
-=item * max_repeat (int)
-=item * max_characters (int)
+=item * time-of_day (0,1)
+=item * max-repeat (int)
+=item * max-characters (int)
 =item * result (“text”, “number”, “date”, “time”, “timestamp”, or “container”) 
 
 =cut
 
-my @availables = qw( global numeric_only four_digit_year not_empty auto_enter type time_of_day max_repeat max_characters result );
+my @availables = qw( global numeric-only four-digit-year not-empty auto-enter type time-of-day max-repeat max-characters result );
 
 sub get
 {
