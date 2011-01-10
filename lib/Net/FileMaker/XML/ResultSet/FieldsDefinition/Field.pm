@@ -55,21 +55,6 @@ sub new
 # _parse
 # 
 
-
-
-#The <field-definition> attributes specify: 
-#  whether the field is an auto-enter field (“yes” or “no”) 
-#  whether the field is a four-digit-year field (“yes” or “no) 
-#  whether it is a global field (“yes” or “no”)
-#  the maximum number of repeating values (max-repeat attribute)
-#  the maximum number of characters allowed (max-characters attribute) 
-#  whether it is a not-empty field (“yes” or “no”)
-#  whether it is for numeric data only (“yes” or “no”) 
-#  result (“text”, “number”, “date”, “time”, “timestamp”, or “container”) 
-#  whether it is a time-of-day field (“yes” or “no”) 
-#  type (“normal”, “calculation”, or “summary”
-
-
 sub _parse
 {
 	my $self = shift;
