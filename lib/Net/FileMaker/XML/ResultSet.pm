@@ -44,15 +44,12 @@ sub new
 {
 	my($class, $res_hash) = @_;
     
+    my @rows;
 	my $self = {
 		_res_hash      => $res_hash, # complete result hash provided by Net::FileMaker::XML search methods
 		# these are the references to the parsed blocks
 		_field_def	   => undef, 
-		_resultset     => undef,
-		_datasource    => undef,
-		_product       => undef,
-		_version       => undef,
-		_xmlns         => undef
+		_rows		   => \@rows			
 	};
 	bless $self;
 	
@@ -70,6 +67,7 @@ sub _parse
 	my $self = shift;
 	# parse the resultset
 	$self->_parse_field_definition;
+	$self->_parse_rows;
 }
 
 # _parse_field_definition
@@ -111,8 +109,90 @@ returns
 sub datasource
 {
 	my $self = shift;
-	return $self->{_field_def}->fields;
+	return $self->{_res_hash}{datasource};
 }
 
-1; # End of Net::FileMaker::XML::Database;
+=head2 xmlns
+
+	returns the xml's namespace of the response
+
+=cut
+
+sub xmlns
+{
+	my $self = shift;
+	return $self->{_res_hash}{xmlns}; 
+}
+
+
+=head2 version
+
+	returns xml's version of the response
+
+=cut
+
+sub version
+{
+	my $self = shift;
+	return $self->{_res_hash}{version}; 
+}
+
+=head2 product
+
+	returns an hash with info about the fm db server ( version and build )
+=cut
+
+sub product
+{
+	my $self = shift;
+	return {
+		version => $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{version},
+		build	=> $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{build},
+	}
+}
+
+=head2 total_count
+
+	returns an integer representing the total number of rows that match the research, DOES NOT TAKE IN ACCOUNT THE LIMIT CLAUSE
+	
+=cut
+
+sub total_count
+{
+	my $self = shift;
+	return $self->{_res_hash}{resultset}{count};
+}
+
+=head2 total_count
+
+	returns an integer representing the total number of rows of the resultset, TAKES IN ACCOUNT THE LIMIT CLAUSE
+	
+=cut
+
+sub fetch_size
+{
+	my $self = shift;
+	return $self->{_res_hash}{resultset}{'fetch-size'};
+}
+
+
+# _parse_rows
+sub _parse_rows
+{
+	my $self = shift;
+	require Net::FileMaker::XML::ResultSet::Row;
+	my $cd = $self->fields_definition;	# column definition, I need it for the inflater
+	my $ds = $self->datasource;
+			
+	if($self->fetch_size == 1){
+		push @{$self->{_rows}} , new Net::FileMaker::XML::ResultSet::Row($self->{_res_hash}{resultset}{record}, $cd , $ds);
+	}else{
+		for my $row (@{$self->{_res_hash}{resultset}{record}}){
+			push @{$self->{_rows}} , new Net::FileMaker::XML::ResultSet::Row($row, $cd,$ds);
+		}
+	}
+}
+
+
+1; # End of Net::FileMaker::XML::ResultSet;
 __END__
