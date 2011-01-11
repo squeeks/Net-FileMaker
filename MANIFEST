@@ -6,9 +6,9 @@ lib/Net/FileMaker.pm
 lib/Net/FileMaker/XML.pm
 lib/Net/FileMaker/XML/Database.pm
 lib/Net/FileMaker/XML/ResultSet.pm
-lib/Net/FileMaker/XML/ResultSet/FiedlsDefinition.pm
+lib/Net/FileMaker/XML/ResultSet/FieldsDefinition.pm
 lib/Net/FileMaker/XML/ResultSet/Row.pm
-lib/Net/FileMaker/XML/ResultSet/FiedlsDefinition/Field.pm
+lib/Net/FileMaker/XML/ResultSet/FieldsDefinition/Field.pm
 lib/Net/FileMaker/Error.pm
 lib/Net/FileMaker/Error/EN/XML.pm
 lib/Net/FileMaker/Error/EN/XSLT.pm
