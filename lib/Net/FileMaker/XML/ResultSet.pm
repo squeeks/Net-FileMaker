@@ -82,7 +82,7 @@ sub _parse_field_definition
 
 =head2 fields_definition
 
-returns the fields definition ( see L<Net::FileMaker::XML::FieldsDefinition::Field> for details on what it might return )
+returns an hash with the fields' definition ( see L<Net::FileMaker::XML::FieldsDefinition::Field> for details on what it might return each definition )
 
 
 =cut
@@ -95,10 +95,10 @@ sub fields_definition
 
 =head2 datasource
 
-return useful informations about the datasource.
+return an hash with useful informations about the datasource.
 you don't need to use these infos to parse the date|time|timestamp fields as it is already done by the get_inflated*  methods of each row returned by the I<rows> method.
 
-returns:
+the hash contains:
 
 =over 4
 
