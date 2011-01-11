@@ -26,7 +26,7 @@ if(ref($dbx) eq 'ARRAY')
         if(ref($layouts) eq 'ARRAY')
         {
                 my $findall = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 1});
-                is(ref($findall), 'HASH', 'findall() returned hashref');
+                is(ref($findall), 'Net::FileMaker::XML::ResultSet', 'findall() returned Net::FileMaker::XML::ResultSet');
         }
 }
 
