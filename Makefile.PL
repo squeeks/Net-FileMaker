@@ -15,6 +15,7 @@ WriteMakefile(
         'Test::More'	=> 0,
 	'LWP' 		=> 0,
 	'URI'		=> 0,
+	'DateTime'  => 0,
 	'XML::Twig'     => "3.33",
     },
 
