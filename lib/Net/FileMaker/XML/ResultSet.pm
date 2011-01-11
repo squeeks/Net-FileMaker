@@ -42,11 +42,11 @@ This module handles the hash returned by the Net::FileMaker::XML search methods 
 
 sub new
 {
-	my($class, $res_hash) = @_;
-    
+	my($class, %args) = @_;
     my @rows;
 	my $self = {
-		_res_hash      => $res_hash, # complete result hash provided by Net::FileMaker::XML search methods
+		_res_hash      => $args{rs}, # complete result hash provided by Net::FileMaker::XML search methods
+		_db            => $args{db}, # ref to the db, it is useful to add an $row->update method later
 		# these are the references to the parsed blocks
 		_field_def	   => undef, 
 		_rows		   => \@rows			
