@@ -15,10 +15,7 @@ our @ISA = qw(Exporter Net::FileMaker::XML);
 # Do not simply export all your public functions/methods/constants.
 our @EXPORT_OK = (  );
 
-our @EXPORT = qw(
-
-    
-);
+our @EXPORT = qw();
 
 =head1 NAME
 

@@ -23,8 +23,11 @@ my $dbx = $fmx->dbnames;
 my $fmdb = $fmx->database(db => $dbx->[0], user => $ENV{FMS_USER}, pass => $ENV{FMS_PASS});
 ok($fmdb,'Logged in');
 
-my $records = $fmdb->find(layout => $ENV{FMS_LAYOUT}, params => { '-max' => '3'});
-my $rs = Net::FileMaker::XML::ResultSet->new(rs => $records , db => $fmdb);
-ok($rs, 'Directly constructed Net::FileMaker::XML::ResultSet');
+my $layouts = $fmdb->layoutnames;
+if(ref($layouts) eq 'ARRAY')
+{
+	my $records = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 1});
+	ok($records, 'Directly constructed Net::FileMaker::XML::ResultSet');
+}
 
 done_testing();

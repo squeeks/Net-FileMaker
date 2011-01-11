@@ -115,7 +115,6 @@ sub get_inflated
 	if(defined $self->{_col_def}{$col}){
 		if($self->{_col_def}{$col}{result} =~ m/^(date|time|timestamp)$/xms ){
 			# let's convert it to a DateTime
-			print STDERR $self->{_col_def}{$col}{result};
 			my $pattern = $self->{_datasource}{"$1-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
 		    my $cldr = new DateTime::Format::CLDR(
 		        pattern     => $pattern

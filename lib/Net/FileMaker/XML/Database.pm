@@ -2,6 +2,7 @@ package Net::FileMaker::XML::Database;
 
 use strict;
 use warnings;
+use Net::FileMaker::XML::ResultSet;
 
 our @ISA = qw(Net::FileMaker::XML);
 
@@ -107,7 +108,7 @@ sub scriptnames
 
 =head2 find(layout => $layout, params => { parameters })
 
-Returns a hashref of rows on a specific database and layout.
+Returns Net::FileMaker::XML::ResultSet for a specific database and layout.
 
 =cut
 
@@ -126,13 +127,13 @@ sub find
 			params    => $args{params}
 	);
 
-	return $xml;
+	return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
 }
 
 
 =head2 findall(layout => $layout, params => { parameters }, nocheck => 1)
 
-Returns all rows on a specific database and layout.
+Returns a Net::FileMaker::XML::ResultSet  of all rows on a specific database and layout.
 
 nocheck is an optional argument that will skip checking of parameters if set to 1.
 
@@ -171,12 +172,12 @@ sub findall
 			params    => $params
 	);
 
-	return $xml;
+    return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
 }
 
 =head2 findany(layout => $layout, params => { parameters }, nocheck => 1)
 
-Returns a hashref of random rows on a specific database and layout.
+Returns Net::FileMaker::XML::ResultSet of random rows on a specific database and layout.
 
 nocheck is an optional argument that will skip checking of parameters if set to 1.
 
@@ -215,7 +216,7 @@ sub findany
 			params    => $params
 	);
 
-	return $xml;
+    return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
 }
 
 =head2 total_rows(layout => $layout)

@@ -213,8 +213,7 @@ sub _parse_rows
 	require Net::FileMaker::XML::ResultSet::Row;
 	my $cd = $self->fields_definition;	# column definition, I need it for the inflater
 	my $ds = $self->datasource;
-			
-	if($self->fetch_size == 1){
+	if($self->fetch_size == 1){ # if the fetch size is 1 it returns an hash with the row, if more it returns an array
 		push @{$self->{_rows}} , new Net::FileMaker::XML::ResultSet::Row($self->{_res_hash}{resultset}{record}, $cd , $ds);
 	}else{
 		for my $row (@{$self->{_res_hash}{resultset}{record}}){
