@@ -82,7 +82,8 @@ sub _parse_field_definition
 
 =head2 fields_definition
 
-	returns the fields definition
+returns the fields definition ( see L<Net::FileMaker::XML::FieldsDefinition::Field> for details on what it might return )
+
 
 =cut
 
@@ -94,16 +95,44 @@ sub fields_definition
 
 =head2 datasource
 
-returns
-=over
-=item * 'database' 			# database file name
-=item * 'layout' 			# kind of layout, eg. 'List'
-=item * 'timestamp-format' 	# eg. 'MM/dd/yyyy HH:mm:ss',
-=item * 'date-format' 		# eg. 'MM/dd/yyyy',
-=item * 'time-format' 		# eg. 'HH:mm:ss',
-=item * 'table' 			# name of the selected database table,
-=item * 'total-count' 		# total count of the records in the selected table
+return useful informations about the datasource.
+you don't need to use these infos to parse the date|time|timestamp fields as it is already done by the get_inflated*  methods of each row returned by the I<rows> method.
+
+returns:
+
+=over 4
+
+=item * database          
+
+    database file name
+
+=item * layout       
+
+    kind of layout, eg. 'List
+
+=item * timestamp-format
+
+    eg. 'MM/dd/yyyy HH:mm:ss'
+
+=item * date-format       
+
+    eg. 'MM/dd/yyyy'
+
+=item * time-format       
+
+    eg. 'HH:mm:ss'
+
+=item * table             
+
+    name of the selected database table
+
+=item * total-count       
+
+    total count of the records in the selected table
+
 =back
+
+
 =cut
 
 sub datasource
@@ -114,7 +143,7 @@ sub datasource
 
 =head2 xmlns
 
-	returns the xml's namespace of the response
+returns the xml's namespace of the response
 
 =cut
 
@@ -127,7 +156,7 @@ sub xmlns
 
 =head2 version
 
-	returns xml's version of the response
+returns xml's version of the response
 
 =cut
 
@@ -139,7 +168,8 @@ sub version
 
 =head2 product
 
-	returns an hash with info about the fm db server ( version and build )
+returns an hash with info about the fm db server ( version and build )
+
 =cut
 
 sub product
@@ -154,7 +184,7 @@ sub product
 =head2 total_count
 
 	returns an integer representing the total number of rows that match the research, DOES NOT TAKE IN ACCOUNT THE LIMIT CLAUSE
-	
+
 =cut
 
 sub total_count
@@ -163,10 +193,10 @@ sub total_count
 	return $self->{_res_hash}{resultset}{count};
 }
 
-=head2 total_count
+=head2 fetch_size
 
-	returns an integer representing the total number of rows of the resultset, TAKES IN ACCOUNT THE LIMIT CLAUSE
-	
+returns an integer representing the total number of rows of the resultset, TAKES IN ACCOUNT THE LIMIT CLAUSE
+
 =cut
 
 sub fetch_size
