@@ -95,7 +95,7 @@ sub fields_definition
 =head2 datasource
 
 returns
-
+=over
 =item * 'database' 			# database file name
 =item * 'layout' 			# kind of layout, eg. 'List'
 =item * 'timestamp-format' 	# eg. 'MM/dd/yyyy HH:mm:ss',
@@ -103,7 +103,7 @@ returns
 =item * 'time-format' 		# eg. 'HH:mm:ss',
 =item * 'table' 			# name of the selected database table,
 =item * 'total-count' 		# total count of the records in the selected table
-
+=back
 =cut
 
 sub datasource
@@ -193,6 +193,17 @@ sub _parse_rows
 	}
 }
 
+=head2 rows
+
+	returns all the rows of the resultset as Net::FileMaker::XML::ResultSet::Row(s)
+
+=cut
+
+sub rows
+{
+	my $self = shift;
+	return $self->{_rows};
+}
 
 1; # End of Net::FileMaker::XML::ResultSet;
 __END__

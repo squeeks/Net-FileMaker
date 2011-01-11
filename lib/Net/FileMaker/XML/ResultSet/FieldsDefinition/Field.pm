@@ -75,8 +75,7 @@ sub _parse
 returns the value for the passed parameter
 
 the accepted params are ( possible results in parentheses ):	
-=over 4
-
+=over
 =item * global (0,1)
 =item * numeric-only (0,1)
 =item * four-digit-year (0,1)
@@ -87,7 +86,7 @@ the accepted params are ( possible results in parentheses ):
 =item * max-repeat (int)
 =item * max-characters (int)
 =item * result (“text”, “number”, “date”, “time”, “timestamp”, or “container”) 
-
+=back
 =cut
 
 my @availables = qw( global numeric-only four-digit-year not-empty auto-enter type time-of-day max-repeat max-characters result );
