@@ -138,6 +138,8 @@ Updates the value of a specific record column and returns an N::F::X::ResultSet 
 
 =cut
 
+#todo: add tests to /t/01_xml
+
 sub edit
 {
     my ($self, %args) = @_;
