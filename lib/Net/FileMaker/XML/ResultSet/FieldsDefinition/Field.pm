@@ -30,24 +30,6 @@ sub new
     return $self;
 }
 
-# _parse
-# 
-
-sub _parse
-{
-    my $self = shift;
-    
-    # boolean fields ( "yes" or "no" ) to be converted into 1 or 0
-    my @bools = qw( global numeric-only four-digit-year not-empty auto-enter time-of-day );
-    foreach my $key (keys %{$self->{_res_hash}}) {
-        if(grep $_ eq $key, @bools){
-            $self->{$key} = $self->{_res_hash}{$key} eq 'no' ? 0 : 1;    
-        }else{
-            $self->{$key} = $self->{_res_hash}{$key};  
-        }
-    }
-}
-
 =head2 get($field_name)
 
 Returns the value for the supplied field name.
@@ -103,5 +85,22 @@ sub get_all
     return \%tmp;
 }
 
+
+# _parse
+# 
+sub _parse
+{
+    my $self = shift;
+    
+    # boolean fields ( "yes" or "no" ) to be converted into 1 or 0
+    my @bools = qw( global numeric-only four-digit-year not-empty auto-enter time-of-day );
+    foreach my $key (keys %{$self->{_res_hash}}) {
+        if(grep $_ eq $key, @bools){
+            $self->{$key} = $self->{_res_hash}{$key} eq 'no' ? 0 : 1;    
+        }else{
+            $self->{$key} = $self->{_res_hash}{$key};  
+        }
+    }
+}
 
 1;
