@@ -10,7 +10,8 @@ Net::FileMaker::XML::ResultSet
 
 =head1 SYNOPSIS
 
-This module handles the hash returned by the Net::FileMaker::XML search methods  . Don't call this module directly, instead use L<Net::FileMaker::XML>.
+This module handles the hash returned by the Net::FileMaker::XML search methods. 
+Don't call this module directly, instead use L<Net::FileMaker::XML>.
 
 =head1 METHODS
 
@@ -58,8 +59,8 @@ sub _parse_field_definition
 
 =head2 fields_definition
 
-returns an hash with the fields' definition ( see L<Net::FileMaker::XML::FieldsDefinition::Field> for details on what it might return each definition )
-
+Returns an hash with the fields' definition. See
+L<Net::FileMaker::XML::FieldsDefinition::Field>.
 
 =cut
 
@@ -71,8 +72,9 @@ sub fields_definition
 
 =head2 datasource
 
-return an hash with useful informations about the datasource.
-you don't need to use these infos to parse the date|time|timestamp fields as it is already done by the get_inflated*  methods of each row returned by the I<rows> method.
+Return an hash with useful information about the datasource.
+You don't need to use this information to parse the date, time or timestamp fields 
+as it is already done by the C<get_inflated> methods of each row returned by the I<rows> method.
 
 the hash contains:
 
@@ -119,7 +121,7 @@ sub datasource
 
 =head2 xmlns
 
-returns the xml's namespace of the response
+Returns the XML namespace of the response.
 
 =cut
 
@@ -132,7 +134,7 @@ sub xmlns
 
 =head2 version
 
-returns xml's version of the response
+Returns the XML version of the response.
 
 =cut
 
@@ -144,7 +146,7 @@ sub version
 
 =head2 product
 
-returns an hash with info about the fm db server ( version and build )
+Returns an hash with information about the FileMaker Server.
 
 =cut
 
@@ -159,7 +161,8 @@ sub product
 
 =head2 total_count
 
-    returns an integer representing the total number of rows that match the research, DOES NOT TAKE IN ACCOUNT THE LIMIT CLAUSE
+Returns an integer representing the total number of rows that match the research
+but B<does not> take into account the limit clause.
 
 =cut
 
@@ -171,7 +174,8 @@ sub total_count
 
 =head2 fetch_size
 
-returns an integer representing the total number of rows of the resultset, TAKES IN ACCOUNT THE LIMIT CLAUSE
+Returns an integer representing the total number of rows of the resultset, but
+does take into account the limit clause.
 
 =cut
 
@@ -200,7 +204,8 @@ sub _parse_rows
 
 =head2 rows
 
-    returns all the rows of the resultset as Net::FileMaker::XML::ResultSet::Row(s)
+Returns all the rows of the resultset as L<Net::FileMaker::XML::ResultSet::Row>
+objects.
 
 =cut
 
@@ -210,5 +215,4 @@ sub rows
     return $self->{_rows};
 }
 
-1; # End of Net::FileMaker::XML::ResultSet;
-__END__
+1;
