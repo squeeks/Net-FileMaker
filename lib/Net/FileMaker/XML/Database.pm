@@ -3,6 +3,7 @@ package Net::FileMaker::XML::Database;
 use strict;
 use warnings;
 use Net::FileMaker::XML::ResultSet;
+use Carp;
 
 our @ISA = qw(Net::FileMaker::XML);
 
@@ -128,6 +129,89 @@ sub find
 	);
 
 	return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
+}
+
+
+=head2 edit(layout => 'mylayout' , recid => $recid , params => { params })
+
+Updates the value of a specific record column and returns an N::F::X::ResultSet object
+
+=cut
+
+sub edit
+{
+    my ($self, %args) = @_;
+
+    $args{params}->{'-lay'} = $args{layout};
+    $args{params}->{'-db'}  = $self->{db};
+    
+    # just to make the recid param more visible than putting it into the params
+    croak 'recid must be defined' if(! defined $args{recid});
+    $args{params}->{'-recid'}  = $args{recid};
+    
+    my $xml = $self->_request(
+            resultset => $self->{resultset}, 
+            user      => $self->{user}, 
+            pass      => $self->{pass}, 
+            query     => '-edit',
+            params    => $args{params}
+    );
+
+    return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
+}
+
+=head2 delete(layout => 'mylayout' , recid => $recid , params => { params })
+
+Deletes the record with that specific record id and returns an N::F::X::ResultSet object
+
+=cut
+
+sub delete
+{
+    my ($self, %args) = @_;
+
+    $args{params}->{'-lay'} = $args{layout};
+    $args{params}->{'-db'}  = $self->{db};
+    
+    # just to make the recid param more visible than putting it into the params
+    croak 'recid must be defined' if(! defined $args{recid});
+    $args{params}->{'-recid'}  = $args{recid};
+    
+    my $xml = $self->_request(
+            resultset => $self->{resultset}, 
+            user      => $self->{user}, 
+            pass      => $self->{pass}, 
+            query     => '-delete',
+            params    => $args{params}
+    );
+
+    return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
+}
+
+
+
+=head2 insert(layout => 'mylayout' , recid => $recid , params => { params })
+
+Creates a new record and populates that record with the contents of any name/value pair passed with the params' hash and returns an N::F::X::ResultSet object
+
+=cut
+
+sub insert
+{
+    my ($self, %args) = @_;
+
+    $args{params}->{'-lay'} = $args{layout};
+    $args{params}->{'-db'}  = $self->{db};
+    
+    my $xml = $self->_request(
+            resultset => $self->{resultset}, 
+            user      => $self->{user}, 
+            pass      => $self->{pass}, 
+            query     => '-new',
+            params    => $args{params}
+    );
+
+    return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
 }
 
 
