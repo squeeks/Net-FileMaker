@@ -8,14 +8,6 @@ use Net::FileMaker::XML;
 
 Net::FileMaker::XML::ResultSet
 
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
-our $VERSION = 0.01;
-
 =head1 SYNOPSIS
 
 This module handles the hash returned by the Net::FileMaker::XML search methods  . Don't call this module directly, instead use L<Net::FileMaker::XML>.
