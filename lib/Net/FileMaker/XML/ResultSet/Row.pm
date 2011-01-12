@@ -12,7 +12,9 @@ Net::FileMaker::XML::ResultSet::FieldsDefinition::Row
 
 =head1 SYNOPSIS
 
-This module handles the single row of the resultset returned by the Net::FileMaker::XML search methods  . Don't call this module directly, instead use L<Net::FileMaker::XML>.
+This module handles the single row of the resultset returned by the
+L<Net::FileMaker::XML> search methods. Don't call this module directly, 
+instead use L<Net::FileMaker::XML>.
 
 =head1 METHODS
 
@@ -42,7 +44,7 @@ sub _parse{
 
 =head2 mod_id
 
-    returns the mod id for this row
+Returns the mod id for this row.
 
 =cut
 
@@ -55,7 +57,7 @@ sub mod_id
 
 =head2 record_id
 
-    returns the record id for this row
+Returns the record id for this row.
 
 =cut
 
@@ -68,7 +70,7 @@ sub record_id
 
 =head2 get('colname')
 
-    returns the value of the selected column for this row
+Returns the value of the selected column for this row.
 
 =cut
 
@@ -81,7 +83,8 @@ sub get
 
 =head2 get_inflated('colname')
 
-    returns the value of the selected column for this row, if the type is date|time|datetime returns a DateTime obj
+Returns the value of the selected column for this row. If the type is
+date, time or datetime returns, it will return a L<DateTime> object.
 
 =cut
 
@@ -105,7 +108,7 @@ sub get_inflated
 
 =head2 get_columns
 
-    returns an hash with column names & relative values for this row
+Returns an hash with column names & relative values for this row.
 
 =cut
 sub get_columns
@@ -120,7 +123,8 @@ sub get_columns
 
 =head2 get_inflated_columns
 
-    returns an hash with column names & relative values for this row, if the type is date|time|datetime returns a DateTime obj
+Returns an hash with column names & relative values for this row. If the type is
+date, time or datetime returns a L<DateTime> object.
 
 =cut
 
@@ -136,4 +140,3 @@ sub get_inflated_columns
 
 
 1;
-__END__
