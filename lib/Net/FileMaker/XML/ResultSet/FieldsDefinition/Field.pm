@@ -26,14 +26,14 @@ This module handles the single field definition hash returned by the Net::FileMa
 
 sub new
 {
-	my($class, $res_hash) = @_;
+    my($class, $res_hash) = @_;
     
-	my $self = {
-		_res_hash      => $res_hash		
-	};
-	bless $self;
-	$self->_parse;
-	return $self;
+    my $self = {
+        _res_hash      => $res_hash        
+    };
+    bless $self;
+    $self->_parse;
+    return $self;
 }
 
 # _parse
@@ -41,17 +41,17 @@ sub new
 
 sub _parse
 {
-	my $self = shift;
-	
-	# boolean fields ( "yes" or "no" ) to be converted into 1 or 0
-	my @bools = qw( global numeric-only four-digit-year not-empty auto-enter time-of-day );
-	foreach my $key (keys %{$self->{_res_hash}}) {
+    my $self = shift;
+    
+    # boolean fields ( "yes" or "no" ) to be converted into 1 or 0
+    my @bools = qw( global numeric-only four-digit-year not-empty auto-enter time-of-day );
+    foreach my $key (keys %{$self->{_res_hash}}) {
         if(grep $_ eq $key, @bools){
-            $self->{$key} = $self->{_res_hash}{$key} eq 'no' ? 0 : 1;	
+            $self->{$key} = $self->{_res_hash}{$key} eq 'no' ? 0 : 1;    
         }else{
-        	$self->{$key} = $self->{_res_hash}{$key};  
+            $self->{$key} = $self->{_res_hash}{$key};  
         }
-	}
+    }
 }
 
 =head2 get('field')
@@ -59,7 +59,7 @@ sub _parse
 returns the value for the passed parameter
 
 it might return ( possible results in parentheses ):
-	
+    
 =over
 
 =item * global (0,1)
@@ -90,23 +90,23 @@ my @availables = qw( global numeric-only four-digit-year not-empty auto-enter ty
 
 sub get
 {
-	my ( $self, $par ) = @_;
+    my ( $self, $par ) = @_;
 
-	croak 'this parameter is not defined!' if(! grep $_ eq $par, @availables);
-	return $self->{$par};
+    croak 'this parameter is not defined!' if(! grep $_ eq $par, @availables);
+    return $self->{$par};
 }
 
 =head2 get_all
 
-	returns a reference to an hash with all the parameters of this field
+    returns a reference to an hash with all the parameters of this field
 
 =cut
 
 sub get_all
 {
-	my $self = shift;
-	my %tmp = map { $_ => $self->{$_} } @availables;
-	return \%tmp;
+    my $self = shift;
+    my %tmp = map { $_ => $self->{$_} } @availables;
+    return \%tmp;
 }
 
 
