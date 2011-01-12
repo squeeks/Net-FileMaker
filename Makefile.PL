@@ -12,10 +12,11 @@ WriteMakefile(
       : ()),
     
     PREREQ_PM => {
-        'Test::More'	=> 0,
+    'Test::More'	=> 0,
 	'LWP' 		=> 0,
 	'URI'		=> 0,
-	'DateTime'  => 0,
+	'DateTime::Format::CLDR'  => 0,
+	'Carp'      => 0,
 	'XML::Twig'     => "3.33",
     },
 
