@@ -34,14 +34,6 @@ sub new
     return $self;
 }
 
-
-
-# _parse
-sub _parse{
-    my $self = shift;
-    
-}
-
 =head2 mod_id
 
 Returns the mod id for this row.
@@ -136,6 +128,14 @@ sub get_inflated_columns
         $res{$k} = $self->get_inflated($k);
     }    
     return \%res;
+}
+
+
+
+# _parse
+sub _parse{
+    my $self = shift;
+    
 }
 
 
