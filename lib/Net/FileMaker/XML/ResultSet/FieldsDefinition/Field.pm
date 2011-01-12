@@ -10,7 +10,9 @@ Net::FileMaker::XML::ResultSet::FieldsDefinition::Field
 
 =head1 SYNOPSIS
 
-This module handles the single field definition hash returned by the Net::FileMaker::XML search methods  . Don't call this module directly, instead use L<Net::FileMaker::XML>.
+This module handles the single field definition hash returned by the
+L<Net::FileMaker::XML> search methods. Don't call this module directly,
+instead use L<Net::FileMaker::XML>.
 
 =head1 METHODS
 
@@ -46,11 +48,11 @@ sub _parse
     }
 }
 
-=head2 get('field')
+=head2 get($field_name)
 
-returns the value for the passed parameter
+Returns the value for the supplied field name.
 
-it might return ( possible results in parentheses ):
+It may return (possible results in parentheses):
     
 =over
 
@@ -90,7 +92,7 @@ sub get
 
 =head2 get_all
 
-    returns a reference to an hash with all the parameters of this field
+Returns a reference to an hash with all the parameters of this field.
 
 =cut
 
@@ -103,4 +105,3 @@ sub get_all
 
 
 1;
-__END__
