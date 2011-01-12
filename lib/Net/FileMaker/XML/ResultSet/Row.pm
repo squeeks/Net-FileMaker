@@ -2,25 +2,9 @@ package Net::FileMaker::XML::ResultSet::Row;
 
 use strict;
 use warnings;
-use Moose;
 use Carp;
 use DateTime;
 use DateTime::Format::CLDR;
-
-require Exporter;
-use AutoLoader qw(AUTOLOAD);
-
-our @ISA = qw(Exporter Net::FileMaker::XML);
-
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-our @EXPORT_OK = (  );
-
-our @EXPORT = qw(
-
-    
-);
 
 =head1 NAME
 
@@ -44,11 +28,12 @@ This module handles the single row of the resultset returned by the Net::FileMak
 
 sub new
 {
-	my($class, $res_hash , $col_def , $data_source) = @_;
+	my($class, $res_hash , $col_def , $data_source , $db) = @_;
 	my $self = {
 		_col_def	=> $col_def,
 		_datasource => $data_source,	
-		_res_hash	=> $res_hash		
+		_res_hash	=> $res_hash,
+		_db_ref     => $db		
 	};
 	bless $self;
 	$self->_parse;
@@ -85,7 +70,7 @@ sub mod_id
 sub record_id
 {
 	my $self = shift;
-	return $self->{_res_hash}{'mod-id'};
+	return $self->{_res_hash}{'record-id'};
 }
 
 

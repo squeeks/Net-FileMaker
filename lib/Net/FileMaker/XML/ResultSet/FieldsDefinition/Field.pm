@@ -2,20 +2,7 @@ package Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
 
 use strict;
 use warnings;
-use Moose;
 use Carp;
-
-require Exporter;
-use AutoLoader qw(AUTOLOAD);
-
-our @ISA = qw(Exporter Net::FileMaker::XML);
-
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-our @EXPORT_OK = (  );
-
-our @EXPORT = qw();
 
 =head1 NAME
 
@@ -55,16 +42,16 @@ sub new
 sub _parse
 {
 	my $self = shift;
-	$self->{global} 			= $self->{_res_hash}{global} eq 'no' ? 0 : 1				if defined $self->{_res_hash}{global} ;
-	$self->{'numeric-only'} 	= $self->{_res_hash}{'numeric-only'} eq 'no' ? 0 : 1 		if defined $self->{_res_hash}{'numeric-only'};
-	$self->{'four-digit-year'} 	= $self->{_res_hash}{'four-digit-year'} eq 'no' ? 0 : 1		if defined $self->{_res_hash}{'four-digit-year'};
-	$self->{'not-empty'} 		= $self->{_res_hash}{'not-empty'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'not-empty'};
-	$self->{'auto-enter'} 		= $self->{_res_hash}{'auto-enter'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'auto-enter'};
-	$self->{type} 				= $self->{_res_hash}{type}									if defined $self->{_res_hash}{type};
-	$self->{'time-of-day'} 		= $self->{_res_hash}{'time-of-day'} eq 'no' ? 0 : 1			if defined $self->{_res_hash}{'time-of-day'};
-	$self->{'max-repeat'} 		= $self->{_res_hash}{'max-repeat'}							if defined $self->{_res_hash}{'max-repeat'};
-	$self->{'max-characters'}	= $self->{_res_hash}{'max-characters'}						if defined $self->{_res_hash}{'max-characters'};	
-	$self->{result} 			= $self->{_res_hash}{result}								if defined $self->{_res_hash}{result};
+	
+	# boolean fields ( "yes" or "no" ) to be converted into 1 or 0
+	my @bools = qw( global numeric-only four-digit-year not-empty auto-enter time-of-day );
+	foreach my $key (keys %{$self->{_res_hash}}) {
+        if(grep $_ eq $key, @bools){
+            $self->{$key} = $self->{_res_hash}{$key} eq 'no' ? 0 : 1;	
+        }else{
+        	$self->{$key} = $self->{_res_hash}{$key};  
+        }
+	}
 }
 
 =head2 get('field')

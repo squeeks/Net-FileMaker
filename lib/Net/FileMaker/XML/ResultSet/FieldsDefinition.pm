@@ -2,23 +2,6 @@ package Net::FileMaker::XML::ResultSet::FieldsDefinition;
 
 use strict;
 use warnings;
-use Moose;
-
-
-require Exporter;
-use AutoLoader qw(AUTOLOAD);
-
-our @ISA = qw(Exporter Net::FileMaker::XML);
-
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-our @EXPORT_OK = (  );
-
-our @EXPORT = qw(
-
-    
-);
 
 =head1 NAME
 
