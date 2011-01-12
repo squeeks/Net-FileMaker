@@ -36,27 +36,6 @@ sub new
     return $self;
 }
 
-# _parse
-# calls all the methods that parse the single blocks of the response
-
-sub _parse
-{
-    my $self = shift;
-    # parse the resultset
-    $self->_parse_field_definition;
-    $self->_parse_rows;
-}
-
-# _parse_field_definition
-# parses the field definition instantiating a N::F::X::D::FieldDefinition
-
-sub _parse_field_definition
-{
-    my ($self)  = @_;
-    require Net::FileMaker::XML::ResultSet::FieldsDefinition;
-    $self->{_field_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{_res_hash}{metadata}{'field-definition'});
-}
-
 =head2 fields_definition
 
 Returns an hash with the fields' definition. See
@@ -214,5 +193,26 @@ sub rows
     my $self = shift;
     return $self->{_rows};
 }
+
+# _parse
+# calls all the methods that parse the single blocks of the response
+sub _parse
+{
+    my $self = shift;
+    # parse the resultset
+    $self->_parse_field_definition;
+    $self->_parse_rows;
+}
+
+# _parse_field_definition
+# parses the field definition instantiating a N::F::X::D::FieldDefinition
+sub _parse_field_definition
+{
+    my ($self)  = @_;
+    require Net::FileMaker::XML::ResultSet::FieldsDefinition;
+    $self->{_field_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{_res_hash}{metadata}{'field-definition'});
+}
+
+
 
 1;
