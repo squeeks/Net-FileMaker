@@ -61,7 +61,7 @@ sub _parse_field_definition
 {
     my ($self)  = @_;
     require Net::FileMaker::XML::ResultSet::FieldsDefinition;
-    $self->{_field_def} = new Net::FileMaker::XML::ResultSet::FieldsDefinition($self->{_res_hash}{metadata}{'field-definition'});
+    $self->{_field_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{_res_hash}{metadata}{'field-definition'});
 }
 
 =head2 fields_definition
@@ -198,10 +198,10 @@ sub _parse_rows
 	my $cd = $self->fields_definition;	# column definition, I need it for the inflater
 	my $ds = $self->datasource;
 	if($self->fetch_size == 1){ # if the fetch size is 1 it returns an hash with the row, if more it returns an array
-		push @{$self->{_rows}} , new Net::FileMaker::XML::ResultSet::Row($self->{_res_hash}{resultset}{record}, $cd , $ds);
+		push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($self->{_res_hash}{resultset}{record}, $cd , $ds);
 	}else{
 		for my $row (@{$self->{_res_hash}{resultset}{record}}){
-			push @{$self->{_rows}} , new Net::FileMaker::XML::ResultSet::Row($row, $cd,$ds,$self->{_db});
+			push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($row, $cd,$ds,$self->{_db});
 		}
 	}
 }

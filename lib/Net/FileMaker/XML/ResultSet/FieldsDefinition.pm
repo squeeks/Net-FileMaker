@@ -44,7 +44,7 @@ sub _parse{
 	my %fields;
 	require Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
 	foreach my $key (sort keys %{$self->{_res_hash}}) {
-    	$fields{$key} = new Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{_res_hash}{$key});
+    	$fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{_res_hash}{$key});
 	}
 	$self->{fields} = \%fields;
 }
