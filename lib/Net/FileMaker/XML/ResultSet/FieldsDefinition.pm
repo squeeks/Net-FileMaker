@@ -30,19 +30,6 @@ sub new
     return $self;
 }
 
-# _parse
-# 
-
-sub _parse{
-    my $self = shift;
-    my %fields;
-    require Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
-    foreach my $key (sort keys %{$self->{_res_hash}}) {
-        $fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{_res_hash}{$key});
-    }
-    $self->{fields} = \%fields;
-}
-
 =head2 get($field_name)
 
 Returns the field definition object
@@ -67,6 +54,20 @@ sub fields
 {
     my ( $self, $field ) = @_;
     return $self->{fields};
+}
+
+
+# _parse
+# 
+sub _parse
+{
+    my $self = shift;
+    my %fields;
+    require Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
+    foreach my $key (sort keys %{$self->{_res_hash}}) {
+        $fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{_res_hash}{$key});
+    }
+    $self->{fields} = \%fields;
 }
 
 1;
