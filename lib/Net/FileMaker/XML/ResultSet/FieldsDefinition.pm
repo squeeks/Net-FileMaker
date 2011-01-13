@@ -19,15 +19,15 @@ directly, instead use L<Net::FileMaker::XML>.
 
 sub new
 {
-    my($class, $res_hash) = @_;
-    
-    my $self = {
-        _res_hash      => $res_hash, # complete result hash provided by Net::FileMaker::XML search methods
-        # these are the references to the parsed blocks
-    };
-    bless $self;
-    $self->_parse;
-    return $self;
+	my($class, $res_hash) = @_;
+	
+	my $self = {
+		_res_hash      => $res_hash, # complete result hash provided by Net::FileMaker::XML search methods
+		# these are the references to the parsed blocks
+	};
+	bless $self;
+	$self->_parse;
+	return $self;
 }
 
 =head2 get($field_name)
@@ -39,8 +39,8 @@ Returns the field definition object
 
 sub get
 {
-    my ( $self, $field ) = @_;
-    return $self->{fields}{$field};
+	my ( $self, $field ) = @_;
+	return $self->{fields}{$field};
 }
 
 =head2 fields
@@ -52,8 +52,8 @@ Returns an hash with the field definition objects
 
 sub fields
 {
-    my ( $self, $field ) = @_;
-    return $self->{fields};
+	my ( $self, $field ) = @_;
+	return $self->{fields};
 }
 
 
@@ -61,13 +61,13 @@ sub fields
 # 
 sub _parse
 {
-    my $self = shift;
-    my %fields;
-    require Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
-    foreach my $key (sort keys %{$self->{_res_hash}}) {
-        $fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{_res_hash}{$key});
-    }
-    $self->{fields} = \%fields;
+	my $self = shift;
+	my %fields;
+	require Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
+	foreach my $key (sort keys %{$self->{_res_hash}}) {
+		$fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{_res_hash}{$key});
+	}
+	$self->{fields} = \%fields;
 }
 
 1;

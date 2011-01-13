@@ -19,21 +19,21 @@ Don't call this module directly, instead use L<Net::FileMaker::XML>.
 
 sub new
 {
-    my($class, %args) = @_;
-    my @rows;
-    my $self = {
-        _res_hash      => $args{rs}, # complete result hash provided by Net::FileMaker::XML search methods
-        _db            => $args{db}, # ref to the db, it is useful to add an $row->update method later
-        # these are the references to the parsed blocks
-        _field_def       => undef, 
-        _rows           => \@rows            
-    };
-    bless $self;
-    
-    # let's begin the parsing
-    $self->_parse;
-    
-    return $self;
+	my($class, %args) = @_;
+	my @rows;
+	my $self = {
+		_res_hash     => $args{rs}, # complete result hash provided by Net::FileMaker::XML search methods
+		_db           => $args{db}, # ref to the db, it is useful to add an $row->update method later
+		# these are the references to the parsed blocks
+		_field_def    => undef, 
+		_rows         => \@rows
+	};
+	bless $self;
+	
+	# let's begin the parsing
+	$self->_parse;
+	
+	return $self;
 }
 
 =head2 fields_definition
@@ -45,8 +45,8 @@ L<Net::FileMaker::XML::FieldsDefinition::Field>.
 
 sub fields_definition
 {
-    my $self = shift;
-    return $self->{_field_def}->fields;
+	my $self = shift;
+	return $self->{_field_def}->fields;
 }
 
 =head2 datasource
@@ -61,31 +61,31 @@ the hash contains:
 
 =item * database          
 
-    database file name
+	database file name
 
 =item * layout       
 
-    kind of layout, eg. 'List
+	kind of layout, eg. 'List
 
 =item * timestamp-format
 
-    eg. 'MM/dd/yyyy HH:mm:ss'
+	eg. 'MM/dd/yyyy HH:mm:ss'
 
 =item * date-format       
 
-    eg. 'MM/dd/yyyy'
+	eg. 'MM/dd/yyyy'
 
 =item * time-format       
 
-    eg. 'HH:mm:ss'
+	eg. 'HH:mm:ss'
 
 =item * table             
 
-    name of the selected database table
+	name of the selected database table
 
 =item * total-count       
 
-    total count of the records in the selected table
+	total count of the records in the selected table
 
 =back
 
@@ -94,8 +94,8 @@ the hash contains:
 
 sub datasource
 {
-    my $self = shift;
-    return $self->{_res_hash}{datasource};
+	my $self = shift;
+	return $self->{_res_hash}{datasource};
 }
 
 =head2 xmlns
@@ -106,8 +106,8 @@ Returns the XML namespace of the response.
 
 sub xmlns
 {
-    my $self = shift;
-    return $self->{_res_hash}{xmlns}; 
+	my $self = shift;
+	return $self->{_res_hash}{xmlns}; 
 }
 
 
@@ -119,8 +119,8 @@ Returns the XML version of the response.
 
 sub version
 {
-    my $self = shift;
-    return $self->{_res_hash}{version}; 
+	my $self = shift;
+	return $self->{_res_hash}{version}; 
 }
 
 =head2 product
@@ -131,11 +131,11 @@ Returns an hash with information about the FileMaker Server.
 
 sub product
 {
-    my $self = shift;
-    return {
-        version => $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{version},
-        build    => $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{build},
-    }
+	my $self = shift;
+	return {
+		version => $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{version},
+		build    => $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{build},
+	}
 }
 
 =head2 total_count
@@ -147,8 +147,8 @@ but B<does not> take into account the limit clause.
 
 sub total_count
 {
-    my $self = shift;
-    return $self->{_res_hash}{resultset}{count};
+	my $self = shift;
+	return $self->{_res_hash}{resultset}{count};
 }
 
 =head2 fetch_size
@@ -160,25 +160,25 @@ does take into account the limit clause.
 
 sub fetch_size
 {
-    my $self = shift;
-    return $self->{_res_hash}{resultset}{'fetch-size'};
+	my $self = shift;
+	return $self->{_res_hash}{resultset}{'fetch-size'};
 }
 
 
 # _parse_rows
 sub _parse_rows
 {
-    my $self = shift;
-    require Net::FileMaker::XML::ResultSet::Row;
-    my $cd = $self->fields_definition;    # column definition, I need it for the inflater
-    my $ds = $self->datasource;
-    if($self->fetch_size == 1){ # if the fetch size is 1 it returns an hash with the row, if more it returns an array
-        push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($self->{_res_hash}{resultset}{record}, $cd , $ds);
-    }else{
-        for my $row (@{$self->{_res_hash}{resultset}{record}}){
-            push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($row, $cd,$ds,$self->{_db});
-        }
-    }
+	my $self = shift;
+	require Net::FileMaker::XML::ResultSet::Row;
+	my $cd = $self->fields_definition;    # column definition, I need it for the inflater
+	my $ds = $self->datasource;
+	if($self->fetch_size == 1){ # if the fetch size is 1 it returns an hash with the row, if more it returns an array
+		push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($self->{_res_hash}{resultset}{record}, $cd , $ds);
+	}else{
+		for my $row (@{$self->{_res_hash}{resultset}{record}}){
+			push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($row, $cd,$ds,$self->{_db});
+		}
+	}
 }
 
 =head2 rows
@@ -190,29 +190,27 @@ objects.
 
 sub rows
 {
-    my $self = shift;
-    return $self->{_rows};
+	my $self = shift;
+	return $self->{_rows};
 }
 
 # _parse
 # calls all the methods that parse the single blocks of the response
 sub _parse
 {
-    my $self = shift;
-    # parse the resultset
-    $self->_parse_field_definition;
-    $self->_parse_rows;
+	my $self = shift;
+	# parse the resultset
+	$self->_parse_field_definition;
+	$self->_parse_rows;
 }
 
 # _parse_field_definition
 # parses the field definition instantiating a N::F::X::D::FieldDefinition
 sub _parse_field_definition
 {
-    my ($self)  = @_;
-    require Net::FileMaker::XML::ResultSet::FieldsDefinition;
-    $self->{_field_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{_res_hash}{metadata}{'field-definition'});
+	my ($self)  = @_;
+	require Net::FileMaker::XML::ResultSet::FieldsDefinition;
+	$self->{_field_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{_res_hash}{metadata}{'field-definition'});
 }
-
-
 
 1;
