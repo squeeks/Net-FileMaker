@@ -22,12 +22,17 @@ instead use L<Net::FileMaker::XML>.
 
 sub new
 {
-	my($class, $res_hash , $col_def , $data_source , $db) = @_;
+	my($class, $res_hash , $dataset) = @_;
+	
+	my $cd = $dataset->fields_definition;    # column definition, I need it for the inflater
+	my $ds = $dataset->datasource;
+	my $db = $dataset->{db};
+	
 	my $self = {
-		columns_def    => $col_def,
-		datasource => $data_source,    
-		result_hash    => $res_hash,
-		db_ref     => $db        
+		columns_def => $cd,
+		datasource 	=> $ds,    
+		result_hash => $res_hash,
+		db_ref     	=> $db        
 	};
 	bless $self;
 	return $self;
@@ -71,6 +76,17 @@ sub get
 	return $self->{result_hash}{field}{$col}{data};
 }
 
+=head2 get_type('colname')
+
+Returns the type of the selected column for this row.
+
+=cut
+
+sub get_type
+{
+	my ( $self , $col ) = @_;
+	return $self->{columns_def}{$col}{result};
+}
 
 =head2 get_inflated('colname')
 
@@ -83,8 +99,8 @@ sub get_inflated
 {
 	my ( $self , $col ) = @_;
 	# if the field is a  “date”, “time” or “timestamp"
-	if(defined $self->{columns_def}{$col}){
-		if($self->{columns_def}{$col}{result} =~ m/^(date|time|timestamp)$/xms ){
+	if(defined $self->get_type($col)){
+		if($self->get_type($col) =~ m/^(date|time|timestamp)$/xms ){
 			# let's convert it to a DateTime
 			my $pattern = $self->{datasource}{"$1-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
 			my $cldr = DateTime::Format::CLDR->new(
@@ -114,8 +130,8 @@ sub get_columns
 
 =head2 get_inflated_columns
 
-Returns an hash with column names & relative values for this row. If the type is
-date, time or datetime returns a L<DateTime> object.
+Returns an hash with column names & relative values for this row. 
+If the type is date, time or datetime returns a L<DateTime> object.
 
 =cut
 
@@ -129,6 +145,57 @@ sub get_inflated_columns
 	return \%res;
 }
 
+=head2 update(params => { 'Field Name' => $value , ... })
 
+Updates the row with the fieldname/value couples passed to params, 
+returns an L<Net::FileMaker::XML::ResultSet> object.
+
+=head3 Dates and Times editing
+
+Filemaker accepts time|date editing as a string only in the format 
+defined in the datasource, otherwise throws an error.
+If you don't want to mess around with that this method allows you 
+to pass a L<Net::FileMaker::XML::ResultSet> object and does the dirty 
+work for you. 
+
+=cut
+
+
+sub update
+{
+	my ( $self , %pars ) = @_;
+	my $db 		= $self->{db_ref};
+	my $layout 	= $self->{datasource}{layout};
+	# let's play with DateTimes if passed
+	my $updates;
+	foreach my $key (keys %{$pars{params}}){
+		my $value = $pars{params}{$key};
+		if(ref($value) eq 'DateTime' ){
+			# let's find what kind of field it is
+			my $format = $self->get_type($key);
+			# and then it's format
+			my $pattern = $self->{datasource}{"$format-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
+			$pars{params}{$key} = new DateTime::Format::CLDR(pattern => $pattern)->format_datetime($value);
+		}
+	}
+	my $result = $db->edit(layout =>$layout  , recid => $self->record_id , params => $pars{params} );
+	return $result;
+}
+
+=head2 delete(params => { 'Field Name' => $value , ... })
+
+Deletes this row, returns an L<Net::FileMaker::XML::ResultSet> object.
+
+=cut
+
+
+sub delete
+{
+	my ( $self , %params ) = @_;
+	my $db 		= $self->{db_ref};
+	my $layout 	= $self->{datasource}{layout};
+	my $result = $db->delete(layout =>$layout  , recid => $self->record_id , params => $params{params});
+	return $result;
+}
 
 1;
