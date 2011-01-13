@@ -59,10 +59,11 @@ sub new
 		resultset => '/fmi/xml/fmresultset.xml',
                 ua        => LWP::UserAgent->new,
                 xml       => XML::Twig->new,
-		uri	  => URI->new($args{host}),	
+        uri => URI->new($args{host}),
 	};
 
-	return bless $self;
+    bless $self , $class;
+	return $self;
 }
 
 =head2 layoutnames
@@ -122,9 +123,9 @@ sub find
 	
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
-			user 	  => $self->{user}, 
-			pass 	  => $self->{pass}, 
-			query	  => '-find',
+			user      => $self->{user}, 
+			pass      => $self->{pass}, 
+			query     => '-find',
 			params    => $args{params}
 	);
 
@@ -167,9 +168,9 @@ sub findall
 
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
-			user 	  => $self->{user}, 
-			pass 	  => $self->{pass}, 
-			query	  => '-findall',
+			user      => $self->{user}, 
+			pass      => $self->{pass}, 
+			query     => '-findall',
 			params    => $params
 	);
 
@@ -211,9 +212,9 @@ sub findany
 
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
-			user 	  => $self->{user}, 
-			pass 	  => $self->{pass}, 
-			query	  => '-findany',
+			user      => $self->{user}, 
+			pass      => $self->{pass}, 
+			query     => '-findany',
 			params    => $params
 	);
 
@@ -327,7 +328,7 @@ sub total_rows
 		pass      => $self->{pass},
 		resultset => $self->{resultset},
 		params    => {'-db' => $self->{db}, '-lay' => $args{layout}, '-max' => '1' },
-		query 	  => '-findall'
+		query     => '-findall'
 	);
 
 	return $xml;

@@ -24,7 +24,7 @@ sub new
 	my $self = {
 		result_hash      => $res_hash, # complete result hash provided by Net::FileMaker::XML search methods
 	};
-	bless $self;
+	bless $self , $class;
 	$self->_parse;
 	return $self;
 }
@@ -67,6 +67,7 @@ sub _parse
 		$fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{result_hash}{$key});
 	}
 	$self->{fields} = \%fields;
+	return;
 }
 
 1;

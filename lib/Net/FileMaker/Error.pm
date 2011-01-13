@@ -40,7 +40,7 @@ sub new
 	}
 	else
 	{
-		return undef;
+		return;
 	}
 	
 }

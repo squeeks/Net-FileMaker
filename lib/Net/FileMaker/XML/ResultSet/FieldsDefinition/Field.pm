@@ -25,7 +25,7 @@ sub new
 	my $self = {
 		result_hash      => $res_hash        
 	};
-	bless $self;
+	bless $self , $class;
 	$self->_parse;
 	return $self;
 }
@@ -67,7 +67,7 @@ my @availables = qw( global numeric-only four-digit-year not-empty auto-enter ty
 sub get
 {
 	my ( $self, $par ) = @_;
-	croak 'this parameter is not defined!' if(! grep $_ eq $par, @availables);
+	croak 'this parameter is not defined!' if(! grep { $_ eq $par } @availables);
 	return $self->{$par};
 }
 
@@ -94,12 +94,13 @@ sub _parse
 	# boolean fields ( "yes" or "no" ) to be converted into 1 or 0
 	my @bools = qw( global numeric-only four-digit-year not-empty auto-enter time-of-day );
 	foreach my $key (keys %{$self->{result_hash}}) {
-		if(grep $_ eq $key, @bools){
+		if(grep {$_ eq $key} @bools){
 			$self->{$key} = $self->{result_hash}{$key} eq 'no' ? 0 : 1;    
 		}else{
 			$self->{$key} = $self->{result_hash}{$key};  
 	    }
 	}
+	return;
 }
 
 1;

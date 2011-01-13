@@ -2,7 +2,7 @@ package Net::FileMaker::XML;
 
 use strict;
 use warnings;
-
+use Carp;
 use Net::FileMaker::Error;
 
 use XML::Twig;
@@ -53,16 +53,16 @@ sub new
 	my($class, %args) = @_;
 
 	# If the protocol isn't specified, let's assume it's just HTTP.
-	if($args{host} !~/^http/)
+	if($args{host} !~/^http/x)
 	{
 		$args{host} = 'http://'.$args{host};
 	}
 
 	my $self = {
-		host	  => $args{host},
-		ua 	  => LWP::UserAgent->new,
-		xml	  => XML::Twig->new,
-		uri	  => URI->new($args{host}),
+		host  => $args{host},
+		ua    => LWP::UserAgent->new,
+		xml   => XML::Twig->new,
+		uri   => URI->new($args{host}),
 		resultset => '/fmi/xml/fmresultset.xml', # Entirely for dbnames();
 	};
 
@@ -71,7 +71,8 @@ sub new
 		$self->{error} = Net::FileMaker::Error->new(lang => $args{error}, type => 'XML');
 	}
 
-	return bless $self;
+    bless $self , $class;
+	return $self;
 
 }
 
@@ -106,7 +107,7 @@ sub dbnames
 	my $self = shift;
 	my $xml  = $self->_request(
 			resultset => $self->{resultset}, 
-			query	  =>'-dbnames'
+			query     =>'-dbnames'
 	);
 
 	return $self->_compose_arrayref('DATABASE_NAME', $xml);
@@ -180,8 +181,6 @@ sub _compose_arrayref
 {
 	my ($self, $fieldname, $xml) = @_;
 	
-	my @output;
-
 	if(ref($xml->{resultset}->{record}) eq 'HASH')
 	{
 		return $xml->{resultset}->{record}->{field}->{$fieldname}->{data};
@@ -210,14 +209,14 @@ sub _assert_param
 	my($self, $unclean_param, $acceptable_params) = @_;
 	my $param;
 
-	if($unclean_param =~/$acceptable_params/)
+	if($unclean_param =~/$acceptable_params/x)
 	{
 		$param = $unclean_param;
 	}
 	else
 	{
 		# TODO: Localise this error message
-		warn "Invalid parameter specified - $unclean_param";
+		carp "Invalid parameter specified - $unclean_param";
 	}
 
 

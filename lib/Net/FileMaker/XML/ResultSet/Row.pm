@@ -30,11 +30,11 @@ sub new
 	
 	my $self = {
 		columns_def => $cd,
-		datasource 	=> $ds,    
+		datasource => $ds,    
 		result_hash => $res_hash,
-		db_ref     	=> $db        
+		db_ref => $db        
 	};
-	bless $self;
+	bless $self , $class;
 	return $self;
 }
 
@@ -163,10 +163,9 @@ to pass a L<DateTime> object and does the dirty work for you.
 sub update
 {
 	my ( $self , %pars ) = @_;
-	my $db 		= $self->{db_ref};
-	my $layout 	= $self->{datasource}{layout};
+	my $db = $self->{db_ref};
+	my $layout = $self->{datasource}{layout};
 	# let's play with DateTimes if passed
-	my $updates;
 	foreach my $key (keys %{$pars{params}}){
 		my $value = $pars{params}{$key};
 		if(ref($value) eq 'DateTime' ){
@@ -174,7 +173,7 @@ sub update
 			my $format = $self->get_type($key);
 			# and then it's format
 			my $pattern = $self->{datasource}{"$format-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
-			$pars{params}{$key} = new DateTime::Format::CLDR(pattern => $pattern)->format_datetime($value);
+			$pars{params}{$key} = DateTime::Format::CLDR->new(pattern => $pattern)->format_datetime($value);
 		}
 	}
 	my $result = $db->edit(layout =>$layout  , recid => $self->record_id , params => $pars{params} );
@@ -191,8 +190,8 @@ Deletes this row, returns an L<Net::FileMaker::XML::ResultSet> object.
 sub delete
 {
 	my ( $self , %params ) = @_;
-	my $db 		= $self->{db_ref};
-	my $layout 	= $self->{datasource}{layout};
+	my $db = $self->{db_ref};
+	my $layout = $self->{datasource}{layout};
 	my $result = $db->delete(layout =>$layout  , recid => $self->record_id , params => $params{params});
 	return $result;
 }

@@ -22,12 +22,12 @@ sub new
 	my($class, %args) = @_;
 	my @rows;
 	my $self = {
-		result_hash		=> $args{rs}, 	# complete result hash provided by Net::FileMaker::XML search methods
-		db           	=> $args{db}, 	# ref to the db, it is useful to add an $row->update method later
-		fields_def    	=> undef, 		# fields definition
-		rows         	=> \@rows 		# resultset's rows
+		result_hash     => $args{rs},   # complete result hash provided by Net::FileMaker::XML search methods
+		db              => $args{db},   # ref to the db, it is useful to add an $row->update method later
+		fields_def      => undef,       # fields definition
+		rows            => \@rows       # resultset's rows
 	};
-	bless $self;
+	bless $self , $class;
 	# let's begin the parsing
 	$self->_parse;
 	return $self;
@@ -183,6 +183,7 @@ sub _parse
 	# parse the resultset
 	$self->_parse_field_definition;
 	$self->_parse_rows;
+	return;
 }
 
 # _parse_field_definition
@@ -192,6 +193,7 @@ sub _parse_field_definition
 	my ($self)  = @_;
 	require Net::FileMaker::XML::ResultSet::FieldsDefinition;
 	$self->{fields_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{result_hash}{metadata}{'field-definition'});
+	return;
 }
 
 # _parse_rows
@@ -208,6 +210,7 @@ sub _parse_rows
 			push @{$self->{rows}} , Net::FileMaker::XML::ResultSet::Row->new($row,$self);
 		}
 	}
+	return;
 }
 
 1;

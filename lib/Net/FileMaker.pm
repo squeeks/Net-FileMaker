@@ -2,7 +2,7 @@ package Net::FileMaker;
 
 use strict;
 use warnings;
-
+use Carp;
 use 5.008;
 
 use LWP::UserAgent;
@@ -58,7 +58,7 @@ sub new
 	# TODO: Add XSLT, PHP, etc.
 	else
 	{
-		die('Unknown type specified.');
+		croak 'Unknown type specified.';
 	}
 
 }
