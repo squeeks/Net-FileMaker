@@ -147,7 +147,7 @@ sub get_inflated_columns
 
 =head2 update(params => { 'Field Name' => $value , ... })
 
-Updates the row with the fieldname/value couples passed to params, 
+Updates the row with the fieldname/value pairs passed to params, 
 returns an L<Net::FileMaker::XML::ResultSet> object.
 
 =head3 Dates and Times editing
@@ -155,8 +155,7 @@ returns an L<Net::FileMaker::XML::ResultSet> object.
 Filemaker accepts time|date editing as a string only in the format 
 defined in the datasource, otherwise throws an error.
 If you don't want to mess around with that this method allows you 
-to pass a L<Net::FileMaker::XML::ResultSet> object and does the dirty 
-work for you. 
+to pass a L<DateTime> object and does the dirty work for you. 
 
 =cut
 
