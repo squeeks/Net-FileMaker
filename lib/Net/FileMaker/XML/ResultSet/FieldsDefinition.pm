@@ -22,8 +22,7 @@ sub new
 	my($class, $res_hash) = @_;
 	
 	my $self = {
-		_res_hash      => $res_hash, # complete result hash provided by Net::FileMaker::XML search methods
-		# these are the references to the parsed blocks
+		result_hash      => $res_hash, # complete result hash provided by Net::FileMaker::XML search methods
 	};
 	bless $self;
 	$self->_parse;
@@ -64,8 +63,8 @@ sub _parse
 	my $self = shift;
 	my %fields;
 	require Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
-	foreach my $key (sort keys %{$self->{_res_hash}}) {
-		$fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{_res_hash}{$key});
+	foreach my $key (sort keys %{$self->{result_hash}}) {
+		$fields{$key} = Net::FileMaker::XML::ResultSet::FieldsDefinition::Field->new($self->{result_hash}{$key});
 	}
 	$self->{fields} = \%fields;
 }

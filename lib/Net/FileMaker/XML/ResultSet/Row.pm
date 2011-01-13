@@ -24,13 +24,12 @@ sub new
 {
 	my($class, $res_hash , $col_def , $data_source , $db) = @_;
 	my $self = {
-		_col_def    => $col_def,
-		_datasource => $data_source,    
-		_res_hash    => $res_hash,
-		_db_ref     => $db        
+		columns_def    => $col_def,
+		datasource => $data_source,    
+		result_hash    => $res_hash,
+		db_ref     => $db        
 	};
 	bless $self;
-	$self->_parse;
 	return $self;
 }
 
@@ -43,7 +42,7 @@ Returns the mod id for this row.
 sub mod_id
 {
 	my $self = shift;
-	return $self->{_res_hash}{'mod-id'};
+	return $self->{result_hash}{'mod-id'};
 }
 
 
@@ -56,7 +55,7 @@ Returns the record id for this row.
 sub record_id
 {
 	my $self = shift;
-	return $self->{_res_hash}{'record-id'};
+	return $self->{result_hash}{'record-id'};
 }
 
 
@@ -69,7 +68,7 @@ Returns the value of the selected column for this row.
 sub get
 {
 	my ( $self , $col ) = @_;
-	return $self->{_res_hash}{field}{$col}{data};
+	return $self->{result_hash}{field}{$col}{data};
 }
 
 
@@ -84,18 +83,18 @@ sub get_inflated
 {
 	my ( $self , $col ) = @_;
 	# if the field is a  “date”, “time” or “timestamp"
-	if(defined $self->{_col_def}{$col}){
-		if($self->{_col_def}{$col}{result} =~ m/^(date|time|timestamp)$/xms ){
+	if(defined $self->{columns_def}{$col}){
+		if($self->{columns_def}{$col}{result} =~ m/^(date|time|timestamp)$/xms ){
 			# let's convert it to a DateTime
-			my $pattern = $self->{_datasource}{"$1-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
+			my $pattern = $self->{datasource}{"$1-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
 			my $cldr = DateTime::Format::CLDR->new(
 				pattern     => $pattern
 			);
-			return $cldr->parse_datetime($self->{_res_hash}{field}{$col}{data}) if(defined $self->{_res_hash}{field}{$col}{data});
+			return $cldr->parse_datetime($self->{result_hash}{field}{$col}{data}) if(defined $self->{result_hash}{field}{$col}{data});
 		}
 	}
 	# if the type is one of the ones above let's convert the value in a DateTime
-	return $self->{_res_hash}{field}{$col}{data};
+	return $self->{result_hash}{field}{$col}{data};
 }
 
 =head2 get_columns
@@ -107,7 +106,7 @@ sub get_columns
 {
 	my ( $self , $col ) = @_;
 	my %res;
-	foreach my $k(sort keys %{$self->{_res_hash}{field}}) {
+	foreach my $k(sort keys %{$self->{result_hash}{field}}) {
 		$res{$k} = $self->get($k);
 	}    
 	return \%res;
@@ -124,19 +123,12 @@ sub get_inflated_columns
 {
 	my ( $self , $col ) = @_;
 	my %res;
-	foreach my $k(sort keys %{$self->{_res_hash}{field}}) {
+	foreach my $k(sort keys %{$self->{result_hash}{field}}) {
 		$res{$k} = $self->get_inflated($k);
 	}    
 	return \%res;
 }
 
-
-
-# _parse
-sub _parse{
-	my $self = shift;
-	
-}
 
 
 1;

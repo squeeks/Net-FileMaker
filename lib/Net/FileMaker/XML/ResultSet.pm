@@ -22,17 +22,14 @@ sub new
 	my($class, %args) = @_;
 	my @rows;
 	my $self = {
-		_res_hash     => $args{rs}, # complete result hash provided by Net::FileMaker::XML search methods
-		_db           => $args{db}, # ref to the db, it is useful to add an $row->update method later
-		# these are the references to the parsed blocks
-		_field_def    => undef, 
-		_rows         => \@rows
+		result_hash		=> $args{rs}, 	# complete result hash provided by Net::FileMaker::XML search methods
+		db           	=> $args{db}, 	# ref to the db, it is useful to add an $row->update method later
+		fields_def    	=> undef, 		# fields definition
+		rows         	=> \@rows 		# resultset's rows
 	};
 	bless $self;
-	
 	# let's begin the parsing
 	$self->_parse;
-	
 	return $self;
 }
 
@@ -46,7 +43,7 @@ L<Net::FileMaker::XML::FieldsDefinition::Field>.
 sub fields_definition
 {
 	my $self = shift;
-	return $self->{_field_def}->fields;
+	return $self->{fields_def}->fields;
 }
 
 =head2 datasource
@@ -95,7 +92,7 @@ the hash contains:
 sub datasource
 {
 	my $self = shift;
-	return $self->{_res_hash}{datasource};
+	return $self->{result_hash}{datasource};
 }
 
 =head2 xmlns
@@ -107,7 +104,7 @@ Returns the XML namespace of the response.
 sub xmlns
 {
 	my $self = shift;
-	return $self->{_res_hash}{xmlns}; 
+	return $self->{result_hash}{xmlns}; 
 }
 
 
@@ -120,7 +117,7 @@ Returns the XML version of the response.
 sub version
 {
 	my $self = shift;
-	return $self->{_res_hash}{version}; 
+	return $self->{result_hash}{version}; 
 }
 
 =head2 product
@@ -133,8 +130,8 @@ sub product
 {
 	my $self = shift;
 	return {
-		version => $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{version},
-		build    => $self->{_res_hash}{product}{'FileMaker Web Publishing Engine'}{build},
+		version => $self->{result_hash}{product}{'FileMaker Web Publishing Engine'}{version},
+		build    => $self->{result_hash}{product}{'FileMaker Web Publishing Engine'}{build},
 	}
 }
 
@@ -148,7 +145,7 @@ but B<does not> take into account the limit clause.
 sub total_count
 {
 	my $self = shift;
-	return $self->{_res_hash}{resultset}{count};
+	return $self->{result_hash}{resultset}{count};
 }
 
 =head2 fetch_size
@@ -161,7 +158,7 @@ does take into account the limit clause.
 sub fetch_size
 {
 	my $self = shift;
-	return $self->{_res_hash}{resultset}{'fetch-size'};
+	return $self->{result_hash}{resultset}{'fetch-size'};
 }
 
 
@@ -173,10 +170,10 @@ sub _parse_rows
 	my $cd = $self->fields_definition;    # column definition, I need it for the inflater
 	my $ds = $self->datasource;
 	if($self->fetch_size == 1){ # if the fetch size is 1 it returns an hash with the row, if more it returns an array
-		push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($self->{_res_hash}{resultset}{record}, $cd , $ds);
+		push @{$self->{rows}} , Net::FileMaker::XML::ResultSet::Row->new($self->{result_hash}{resultset}{record}, $cd , $ds);
 	}else{
-		for my $row (@{$self->{_res_hash}{resultset}{record}}){
-			push @{$self->{_rows}} , Net::FileMaker::XML::ResultSet::Row->new($row, $cd,$ds,$self->{_db});
+		for my $row (@{$self->{result_hash}{resultset}{record}}){
+			push @{$self->{rows}} , Net::FileMaker::XML::ResultSet::Row->new($row, $cd,$ds,$self->{db});
 		}
 	}
 }
@@ -191,7 +188,7 @@ objects.
 sub rows
 {
 	my $self = shift;
-	return $self->{_rows};
+	return $self->{rows};
 }
 
 # _parse
@@ -210,7 +207,7 @@ sub _parse_field_definition
 {
 	my ($self)  = @_;
 	require Net::FileMaker::XML::ResultSet::FieldsDefinition;
-	$self->{_field_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{_res_hash}{metadata}{'field-definition'});
+	$self->{fields_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new($self->{result_hash}{metadata}{'field-definition'});
 }
 
 1;

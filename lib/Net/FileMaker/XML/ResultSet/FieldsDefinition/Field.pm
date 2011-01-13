@@ -23,7 +23,7 @@ sub new
 	my($class, $res_hash) = @_;
 	
 	my $self = {
-		_res_hash      => $res_hash        
+		result_hash      => $res_hash        
 	};
 	bless $self;
 	$self->_parse;
@@ -93,11 +93,11 @@ sub _parse
 	
 	# boolean fields ( "yes" or "no" ) to be converted into 1 or 0
 	my @bools = qw( global numeric-only four-digit-year not-empty auto-enter time-of-day );
-	foreach my $key (keys %{$self->{_res_hash}}) {
+	foreach my $key (keys %{$self->{result_hash}}) {
 		if(grep $_ eq $key, @bools){
-			$self->{$key} = $self->{_res_hash}{$key} eq 'no' ? 0 : 1;    
+			$self->{$key} = $self->{result_hash}{$key} eq 'no' ? 0 : 1;    
 		}else{
-			$self->{$key} = $self->{_res_hash}{$key};  
+			$self->{$key} = $self->{result_hash}{$key};  
 	    }
 	}
 }
