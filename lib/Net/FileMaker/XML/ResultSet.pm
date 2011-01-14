@@ -47,23 +47,17 @@ sub fields_definition
 }
 
 
-=head2 http_request
-
-Returns the http request for this call. Returns an L<HTTP::Request> object.
-
-This is quite useful for debugging purposes.
-
-=cut
-
-sub http_request
-{
-    my $self = shift;
-    return $self->{result_hash}{http_request}; 
-}
 
 =head2 http_response
 
-Returns the http response for this call. Returns an L<HTTP::Response> object
+Returns the http response for this call. Returns an L<HTTP::Response> object.
+
+=begin text
+
+# let's print the request url for debugging purposes
+print $rs->http_response->base;
+
+=end text
 
 =cut
 

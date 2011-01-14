@@ -170,7 +170,6 @@ sub _request
 	}
 
     $xml_data->{http_response} = $res;
-    $xml_data->{http_request} = $req;
     return $xml_data;
 
 }
