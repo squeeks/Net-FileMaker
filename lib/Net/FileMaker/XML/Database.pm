@@ -10,10 +10,11 @@ use base qw(Net::FileMaker::XML);
 # Particular methods have specific parameters that are optional, but need to be validated to mitigate sending
 # bad parameters to the server.
 my $acceptable_params = {
+    'find'    => '-recid|-lop|-op|-max|-skip|-sortorder|-sortfield|-script|-script\.prefind|-script\.presort',	
 	'findall' => '-recid|-lop|-op|-max|-skip|-sortorder|-sortfield|-script|-script\.prefind|-script\.presort',
 	'findany' => '-recid|-lop|-op|-max|-skip|-sortorder|-sortfield|-script|-script\.prefind|-script\.presort',
-	'delete'  => 'db|lay|recid|script',
-	'dup'     => 'db|lay|recid|script',
+	'delete'  => '-db|-lay|-recid|-script',
+	'dup'     => '-db|-lay|-recid|-script',
 	'edit'    => '-db|-lay|-recid|-modid|-script',
 	'new'     => '-db|-lay|-script'
 };
@@ -118,15 +119,19 @@ sub find
 {
 	my ($self, %args) = @_;
 
-	$args{params}->{'-lay'} = $args{layout};
-	$args{params}->{'-db'}  = $self->{db};
+    my $params = { 
+        '-lay' => $args{layout},
+        '-db'  => $self->{db}
+    };
+
+    $params = $self->_assert_params(def_params => $params ,params => $args{params} , acceptable_params => $acceptable_params , type => 'find');
 	
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
 			user      => $self->{user}, 
 			pass      => $self->{pass}, 
 			query     => '-find',
-			params    => $args{params}
+			params    => $params
 	);
 
 	return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
@@ -150,7 +155,7 @@ sub findall
 		'-db'  => $self->{db}
 	};
 
-    $params = $self->_assert_params(def_params => $params , acceptable_params => $acceptable_params);
+    $params = $self->_assert_params(def_params => $params ,params => $args{params} , acceptable_params => $acceptable_params, type => 'findall');
 
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
@@ -180,7 +185,7 @@ sub findany
 		'-db'  => $self->{db}
 	};
 
-    $params = $self->_assert_params(def_params => $params , acceptable_params => $acceptable_params);
+    $params = $self->_assert_params(def_params => $params ,params => $args{params} , acceptable_params => $acceptable_params, type => 'findany');
 
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
@@ -208,19 +213,23 @@ sub edit
 {
     my ($self, %args) = @_;
 
-    $args{params}->{'-lay'} = $args{layout};
-    $args{params}->{'-db'}  = $self->{db};
+    my $params = { 
+        '-lay' => $args{layout},
+        '-db'  => $self->{db}
+    };
     
     # just to make the recid param more visible than putting it into the params
     croak 'recid must be defined' if(! defined $args{recid});
-    $args{params}->{'-recid'}  = $args{recid};
+    $params->{'-recid'}  = $args{recid};
+    
+    $params = $self->_assert_params(def_params => $params ,params => $args{params} , acceptable_params => $acceptable_params, type => 'edit');
     
     my $xml = $self->_request(
             resultset => $self->{resultset}, 
             user      => $self->{user}, 
             pass      => $self->{pass}, 
             query     => '-edit',
-            params    => $args{params}
+            params    => $params
     );
 
     return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
@@ -236,19 +245,23 @@ sub remove
 {
     my ($self, %args) = @_;
 
-    $args{params}->{'-lay'} = $args{layout};
-    $args{params}->{'-db'}  = $self->{db};
+    my $params = { 
+        '-lay' => $args{layout},
+        '-db'  => $self->{db}
+    };
     
     # just to make the recid param more visible than putting it into the params
     croak 'recid must be defined' if(! defined $args{recid});
-    $args{params}->{'-recid'}  = $args{recid};
+    $params->{'-recid'}  = $args{recid};
+    
+    $params = $self->_assert_params(def_params => $params ,params => $args{params} , acceptable_params => $acceptable_params, type => 'delete');    
     
     my $xml = $self->_request(
             resultset => $self->{resultset}, 
             user      => $self->{user}, 
             pass      => $self->{pass}, 
             query     => '-delete',
-            params    => $args{params}
+            params    => $params
     );
 
     return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
@@ -268,15 +281,19 @@ sub insert
 {
     my ($self, %args) = @_;
 
-    $args{params}->{'-lay'} = $args{layout};
-    $args{params}->{'-db'}  = $self->{db};
+    my $params = { 
+        '-lay' => $args{layout},
+        '-db'  => $self->{db}
+    };
+    
+    $params = $self->_assert_params(def_params => $params ,params => $args{params} , acceptable_params => $acceptable_params , type => 'new');
     
     my $xml = $self->_request(
             resultset => $self->{resultset}, 
             user      => $self->{user}, 
             pass      => $self->{pass}, 
             query     => '-new',
-            params    => $args{params}
+            params    => $params
     );
 
     return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);

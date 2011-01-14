@@ -211,17 +211,22 @@ sub _assert_param
 {
 	my($self, $unclean_param, $acceptable_params) = @_;
 	my $param;
-
-	if($unclean_param =~/$acceptable_params/x)
-	{
-		$param = $unclean_param;
-	}
-	else
-	{
-		# TODO: Localise this error message
-		carp "Invalid parameter specified - $unclean_param";
-	}
-
+	# if the param is of private type '-something' let's check, otherwise skip 'cause it could be the name of a field
+	# todo: we might add a strict control to avoid passing others params than the ones with "-" like in findall etc
+    if($unclean_param =~ /^-.+$/x)
+	    {
+		if($unclean_param =~/$acceptable_params/x)
+		{
+			$param = $unclean_param;
+		}
+		else
+		{
+			# TODO: Localise this error message
+			carp "Invalid parameter specified - $unclean_param";
+		}
+    }else{
+    	$param = $unclean_param;
+    }
 
 	return $param;
 }
@@ -237,6 +242,7 @@ sub _assert_params
 	
 	my $params = $args{def_params};
 	my $acceptable_params = $args{acceptable_params};
+	my $type = $args{type};
 	
 	if($args{params} && ref($args{params}) eq 'HASH')
     {
@@ -249,7 +255,7 @@ sub _assert_params
             }
             else
             {
-                $params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{findall});
+                $params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{$type});
             }
         }
     }
