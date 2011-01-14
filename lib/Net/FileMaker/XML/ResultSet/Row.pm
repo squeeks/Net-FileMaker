@@ -227,8 +227,6 @@ sub update
             delete $pars{params}{$key};
 		}
 	}
-	use Data::Dumper;
-	print STDERR Dumper $pars{params};
 	my $result = $db->edit(layout =>$layout  , recid => $self->record_id , params => $pars{params} );
 	return $result;
 }

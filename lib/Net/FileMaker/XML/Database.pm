@@ -14,7 +14,8 @@ my $acceptable_params = {
 	'findany' => '-recid|-lop|-op|-max|-skip|-sortorder|-sortfield|-script|-script\.prefind|-script\.presort',
 	'delete'  => 'db|lay|recid|script',
 	'dup'     => 'db|lay|recid|script',
-	'edit'    => 'db|lay|recid|modid|script',
+	'edit'    => '-db|-lay|-recid|-modid|-script',
+	'new'     => '-db|-lay|-script'
 };
 
 =head1 NAME
@@ -149,21 +150,7 @@ sub findall
 		'-db'  => $self->{db}
 	};
 
-	if($args{params} && ref($args{params}) eq 'HASH')
-	{
-		for my $param(keys %{$args{params}})
-		{
-			# Perform or skip parameter checking
-			if($args{nocheck} && $args{nocheck} == 1)
-			{
-				$params->{$param} = $args{params}->{$param};
-			}
-			else
-			{
-				$params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{findall});
-			}
-		}
-	}
+    $params = $self->_assert_params(def_params => $params , acceptable_params => $acceptable_params);
 
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 
@@ -193,21 +180,7 @@ sub findany
 		'-db'  => $self->{db}
 	};
 
-	if($args{params} && ref($args{params}) eq 'HASH')
-	{
-		for my $param(keys %{$args{params}})
-		{
-			# Perform or skip parameter checking
-			if($args{nocheck} && $args{nocheck} == 1)
-			{
-				$params->{$param} = $args{params}->{$param};
-			}
-			else
-			{
-				$params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{findall});
-			}
-		}
-	}
+    $params = $self->_assert_params(def_params => $params , acceptable_params => $acceptable_params);
 
 	my $xml = $self->_request(
 			resultset => $self->{resultset}, 

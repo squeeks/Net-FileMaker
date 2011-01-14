@@ -205,6 +205,8 @@ sub _compose_arrayref
 #
 # Optional parameters sometimes validation to ensure they are correct.
 # Warnings are issued if a parameter name is somehow invalid.
+# single param check
+
 sub _assert_param
 {
 	my($self, $unclean_param, $acceptable_params) = @_;
@@ -224,5 +226,34 @@ sub _assert_param
 	return $param;
 }
 
+
+# _assert_params
+# Optional parameters sometimes validation to ensure they are correct.
+# Warnings are issued if a parameter name is somehow invalid.
+
+sub _assert_params
+{
+	my ($self , %args) = @_;
+	
+	my $params = $args{def_params};
+	my $acceptable_params = $args{acceptable_params};
+	
+	if($args{params} && ref($args{params}) eq 'HASH')
+    {
+        for my $param(keys %{$args{params}})
+        {
+            # Perform or skip parameter checking
+            if($args{nocheck} && $args{nocheck} == 1)
+            {
+                $params->{$param} = $args{params}->{$param};
+            }
+            else
+            {
+                $params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{findall});
+            }
+        }
+    }
+    return $params;
+}
 
 1; # End of Net::FileMaker::XML;
