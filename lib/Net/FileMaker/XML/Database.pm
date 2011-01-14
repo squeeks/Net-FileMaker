@@ -5,8 +5,7 @@ use warnings;
 use Net::FileMaker::XML::ResultSet;
 use Carp;
 
-our @ISA = qw(Net::FileMaker::XML);
-
+use base qw(Net::FileMaker::XML);
 #
 # Particular methods have specific parameters that are optional, but need to be validated to mitigate sending
 # bad parameters to the server.
@@ -254,13 +253,13 @@ sub edit
     return Net::FileMaker::XML::ResultSet->new(rs => $xml , db => $self);
 }
 
-=head2 delete(layout => $layout , recid => $recid , params => { params })
+=head2 remove(layout => $layout , recid => $recid , params => { params })
 
 Deletes the record with that specific record id and returns an N::F::X::ResultSet object
 
 =cut
 
-sub delete
+sub remove
 {
     my ($self, %args) = @_;
 

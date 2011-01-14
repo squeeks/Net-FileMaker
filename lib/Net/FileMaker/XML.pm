@@ -169,7 +169,9 @@ sub _request
 		$xml_data->{error}->{message} = $self->{error}->get_string($xml_data->{error}->{code});
 	}
 
-        return $xml_data;
+    $xml_data->{http_response} = $res;
+    $xml_data->{http_request} = $req;
+    return $xml_data;
 
 }
 

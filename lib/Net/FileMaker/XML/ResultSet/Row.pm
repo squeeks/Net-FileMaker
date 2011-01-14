@@ -88,6 +88,18 @@ sub get_type
 	return $self->{columns_def}{$col}{result};
 }
 
+=head2 get_max_length('colname')
+
+Returns the type of the selected column for this row.
+
+=cut
+
+sub get_max_length
+{
+    my ( $self , $col ) = @_;
+    return $self->{columns_def}{$col}{'max-repeat'};
+}
+
 =head2 get_inflated('colname')
 
 Returns the value of the selected column for this row. If the type is
@@ -157,6 +169,24 @@ defined in the datasource, otherwise throws an error.
 If you don't want to mess around with that this method allows you 
 to pass a L<DateTime> object and does the dirty work for you. 
 
+=head3 Multiple values fields
+
+This method gives you the possibility to pass an array as a value for multiple-values-fields.
+Obviously you can pass also an array of DateTimes.
+
+=begin text
+
+This allows you to do this:
+
+my @pars = ( 'hello' , undef , 'world' , '');
+$rs->update(params => {{ 'Field Name' => \@pars });
+
+instead of:
+
+$rs->update(params => { 'Field Name[1]' => 'hello' , 'Field Name[3]' => 'world'  , 'Field Name[4]' => '' });
+
+=end text
+
 =cut
 
 
@@ -165,29 +195,64 @@ sub update
 	my ( $self , %pars ) = @_;
 	my $db = $self->{db_ref};
 	my $layout = $self->{datasource}{layout};
-	# let's play with DateTimes if passed
+	
+	# let's play with DateTimes and arrays if passed
 	foreach my $key (keys %{$pars{params}}){
 		my $value = $pars{params}{$key};
-		if(ref($value) eq 'DateTime' ){
-			# let's find what kind of field it is
-			my $format = $self->get_type($key);
-			# and then it's format
-			my $pattern = $self->{datasource}{"$format-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
-			$pars{params}{$key} = DateTime::Format::CLDR->new(pattern => $pattern)->format_datetime($value);
+		
+		# if the type is datetime let's format it right
+		$pars{params}{$key} = $self->_get_formatted_dt($key,$value) if(ref($value) eq 'DateTime' );
+		
+		# let's transform the array into the single params, taking into account the datetimes
+		if(ref($value) eq 'ARRAY'){
+			
+			# fm's arrays have a predefined number of slots
+			# throw error if the array is longer than the max size for this field
+			croak 'the lenght of the array exceeds the max size of the field' if( scalar @$value > $self->get_max_length($key) );
+			
+            for(my $i = 0; $i < scalar @$value; $i++) {
+            
+            	# if the user hasn't defined the value of an index it means he doesn't want it to be modified
+            	if(defined $value->[$i]){
+	        
+	            	# manage datetimes
+	                $value->[$i] = $self->_get_formatted_dt($key,$value) if(ref($value) eq 'DateTime' );
+	                
+	                # set the param for the request
+	                $pars{params}{$key."[".($i+1)."]"} = $value->[$i];
+	                
+            	}
+            }
+            #finally let's delete the array from the params
+            delete $pars{params}{$key};
 		}
 	}
+	use Data::Dumper;
+	print STDERR Dumper $pars{params};
 	my $result = $db->edit(layout =>$layout  , recid => $self->record_id , params => $pars{params} );
 	return $result;
 }
 
-=head2 delete(params => { 'Field Name' => $value , ... })
+
+sub _get_formatted_dt
+{
+	my ( $self , $fieldname , $dt ) = @_;
+    # let's find what kind of field it is
+    my $format = $self->get_type($fieldname);
+    # and then it's format
+    my $pattern = $self->{datasource}{"$format-format"}; # eg. 'MM/dd/yyyy HH:mm:ss'
+	my $result = DateTime::Format::CLDR->new(pattern => $pattern)->format_datetime($dt);
+	return $result;
+}
+
+=head2 remove(params => { 'Field Name' => $value , ... })
 
 Deletes this row, returns an L<Net::FileMaker::XML::ResultSet> object.
 
 =cut
 
 
-sub delete
+sub remove
 {
 	my ( $self , %params ) = @_;
 	my $db = $self->{db_ref};
@@ -195,5 +260,9 @@ sub delete
 	my $result = $db->delete(layout =>$layout  , recid => $self->record_id , params => $params{params});
 	return $result;
 }
+
+
+# 
+
 
 1;
