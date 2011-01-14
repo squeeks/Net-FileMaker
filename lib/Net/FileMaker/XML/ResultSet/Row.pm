@@ -233,6 +233,8 @@ sub update
 	return $result;
 }
 
+# _get_formatted_dt
+# returns formatted dt according to the field definition
 
 sub _get_formatted_dt
 {

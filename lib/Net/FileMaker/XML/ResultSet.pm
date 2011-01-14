@@ -49,7 +49,9 @@ sub fields_definition
 
 =head2 http_request
 
-Returns the http request for this call. Returns an L<HTTP::Request> object
+Returns the http request for this call. Returns an L<HTTP::Request> object.
+
+This is quite useful for debugging purposes.
 
 =cut
 
