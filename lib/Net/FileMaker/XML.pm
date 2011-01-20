@@ -57,7 +57,7 @@ sub new
 	{
 		$args{host} = 'http://'.$args{host};
 	}
-
+    require LWP::UserAgent;
 	my $self = {
 		host  => $args{host},
 		ua    => LWP::UserAgent->new,
