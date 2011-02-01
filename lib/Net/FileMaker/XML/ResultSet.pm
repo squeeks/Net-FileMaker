@@ -198,7 +198,7 @@ sub rows
 }
 
 
-=head2 next
+=head2 next_row
 
 Returns the next L<Net::FileMaker::XML::ResultSet::Row> if available, if not returns an undefined value
 
