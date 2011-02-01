@@ -25,7 +25,8 @@ sub new
 		result_hash     => $args{rs},   # complete result hash provided by Net::FileMaker::XML search methods
 		db              => $args{db},   # ref to the db, it is useful to add an $row->update method later
 		fields_def      => undef,       # fields definition
-		rows            => \@rows       # resultset's rows
+		rows            => \@rows,      # resultset's rows
+		next_index      => 0,           # index used by the "next" method
 	};
 	bless $self , $class;
 	# let's begin the parsing
@@ -195,6 +196,41 @@ sub rows
 	my $self = shift;
 	return $self->{rows};
 }
+
+
+=head2 next
+
+Returns the next L<Net::FileMaker::XML::ResultSet::Row> if available, if not returns an undefined value
+
+=cut
+
+sub next_row
+{
+    my $self = shift;
+    # if next row exists let's return it, otherwise undefined
+    if( $self->{next_index} < scalar @{$self->{rows}} ){
+        my $index = $self->{next_index};
+        $self->{next_index} ++ ;
+        return @{$self->{rows}}[$index];
+    }else{
+        return;
+    }
+}
+
+
+=head2 reset_index
+
+Resets the index for the next method to the first value    
+
+=cut
+
+sub reset_index
+{
+    my $self = shift;
+    $self->{next_index} = 0;
+    return;
+}
+
 
 # _parse
 # calls all the methods that parse the single blocks of the response
