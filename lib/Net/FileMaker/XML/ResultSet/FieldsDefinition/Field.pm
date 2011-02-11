@@ -38,27 +38,48 @@ It may return (possible results in parentheses):
     
 =over
 
-=item * global (0,1)
+=item 
 
-=item * numeric-only (0,1)
+* global (0,1)
 
-=item * four-digit-year (0,1)
+=item 
 
-=item * not-empty (0,1)
+* numeric-only (0,1)
 
-=item * auto_enter (0,1)
+=item 
 
-=item * type (“normal”, “calculation”, or “summary”)
+* four-digit-year (0,1)
 
-=item * time-of_day (0,1)
+=item 
 
-=item * max-repeat (int)
+* not-empty (0,1)
 
-=item * max-characters (int)
+=item 
 
-=item * result (“text”, “number”, “date”, “time”, “timestamp”, or “container”) 
+* auto_enter (0,1)
+
+=item 
+
+* type (“normal”, “calculation”, or “summary”)
+
+=item 
+
+* time-of_day (0,1)
+
+=item 
+
+* max-repeat (int)
+
+=item 
+
+* max-characters (int)
+
+=item 
+
+* result (“text”, “number”, “date”, “time”, “timestamp”, or “container”) 
 
 =back
+
 
 =cut
 
