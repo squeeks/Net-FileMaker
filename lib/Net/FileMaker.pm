@@ -16,11 +16,11 @@ Net::FileMaker - Interact with FileMaker services
 
 =head1 VERSION
 
-Version 0.062
+Version 0.063
 
 =cut
 
-our $VERSION = 0.062;
+our $VERSION = 0.063;
 
 =head1 SYNOPSIS
 
@@ -73,6 +73,7 @@ Squeeks, C<< <squeek at cpan.org> >>
 
 =head1 CONTRIBUTORS
 
+Michele Ongaro, <<ongaro.michele at gmail.com>>
 Simon Cozens, C<<simon at cpan.org>>
 Marcel Grünauer, C<<marcel at cpan.org>>
 

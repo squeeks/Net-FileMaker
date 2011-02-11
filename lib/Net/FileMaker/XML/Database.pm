@@ -25,7 +25,7 @@ Net::FileMaker::XML::Database
 
 =cut
 
-our $VERSION = 0.062;
+our $VERSION = 0.063;
 
 =head1 SYNOPSIS
 
