@@ -10,4 +10,3 @@ BEGIN
     use_ok( 'Net::FileMaker::XML::ResultSet::Row' );
 }
 
-diag( "Net::FileMaker::XML::ResultSet::Row, Perl $], $^X" );

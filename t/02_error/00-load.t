@@ -10,4 +10,3 @@ BEGIN
     use_ok( 'Net::FileMaker::Error' );
 }
 
-diag( "Testing Net::FileMaker::Error, Perl $], $^X" );
