@@ -23,10 +23,6 @@ my $acceptable_params = {
 
 Net::FileMaker::XML::Database
 
-=head1 VERSION
-
-Version 0.062
-
 =cut
 
 our $VERSION = 0.062;
@@ -111,7 +107,7 @@ sub scriptnames
 
 =head2 find(layout => $layout, params => { parameters })
 
-Returns Net::FileMaker::XML::ResultSet for a specific database and layout.
+Returns a L<Net::FileMaker::XML::ResultSet> for a specific database and layout.
 
 =cut
 
@@ -140,9 +136,9 @@ sub find
 
 =head2 findall(layout => $layout, params => { parameters }, nocheck => 1)
 
-Returns a Net::FileMaker::XML::ResultSet  of all rows on a specific database and layout.
+Returns a L<Net::FileMaker::XML::ResultSet> of all rows on a specific database and layout.
 
-nocheck is an optional argument that will skip checking of parameters if set to 1.
+C<nocheck> is an optional argument that will skip checking of parameters if set to 1.
 
 =cut
 
@@ -170,9 +166,9 @@ sub findall
 
 =head2 findany(layout => $layout, params => { parameters }, nocheck => 1)
 
-Returns Net::FileMaker::XML::ResultSet of random rows on a specific database and layout.
+Returns a L<Net::FileMaker::XML::ResultSet> of random rows on a specific database and layout.
 
-nocheck is an optional argument that will skip checking of parameters if set to 1.
+C<nocheck> is an optional argument that will skip checking of parameters if set to 1.
 
 =cut
 
@@ -202,8 +198,8 @@ sub findany
 
 =head2 edit(layout => $layout , recid => $recid , params => { params })
 
-Updates the row with the fieldname/value pairs passed to params, 
-returns an L<Net::FileMaker::XML::ResultSet> object.
+Updates the row with the fieldname/value pairs passed to params.
+Returns a L<Net::FileMaker::XML::ResultSet> object.
 
 =cut
 
@@ -237,7 +233,7 @@ sub edit
 
 =head2 remove(layout => $layout , recid => $recid , params => { params })
 
-Deletes the record with that specific record id and returns an N::F::X::ResultSet object
+Deletes the record with that specific record id and returns a L<Net::FileMaker::XML::ResultSet> object.
 
 =cut
 
@@ -273,8 +269,8 @@ sub remove
 
 Creates a new record and populates that record with the fieldname/value pairs passed to params.
 
-Returns an N::F::X::ResultSet object
-    
+Returns an L<Net::FileMaker::XML::ResultSet> object.
+
 =cut
 
 sub insert
