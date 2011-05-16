@@ -1,4 +1,5 @@
-package Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
+package 
+	Net::FileMaker::XML::ResultSet::FieldsDefinition::Field;
 
 use strict;
 use warnings;
