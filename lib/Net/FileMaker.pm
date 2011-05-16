@@ -14,14 +14,6 @@ use URI;
 
 Net::FileMaker - Interact with FileMaker services
 
-=head1 VERSION
-
-Version 0.063
-
-=cut
-
-our $VERSION = 0.063;
-
 =head1 SYNOPSIS
 
     use Net::FileMaker;

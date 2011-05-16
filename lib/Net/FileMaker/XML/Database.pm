@@ -23,10 +23,6 @@ my $acceptable_params = {
 
 Net::FileMaker::XML::Database
 
-=cut
-
-our $VERSION = 0.063;
-
 =head1 SYNOPSIS
 
 This module handles all the tasks with XML data. Don't call this module directly, instead use L<Net::FileMaker::XML>.
