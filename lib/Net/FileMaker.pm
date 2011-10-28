@@ -19,15 +19,17 @@ Net::FileMaker - Interact with FileMaker services
     use Net::FileMaker;
     my $fms  = Net::FileMaker->new(host => $host, type => 'xml');
 
-Net::FileMaker provides an interface to FileMaker's various HTTP-based interfaces, at present only the XML 
-API is supported, but further support to include XSLT and other means is planned.
+Net::FileMaker provides an interface to FileMaker's various HTTP-based
+interfaces, at present only the XML API is supported, but further support to
+include XSLT and other means is planned.
 
 =head1 METHODS
 
 =head2 new(host => $host, type => 'xml')
 
-Creates a new object. Host names must be valid URI. The type key specifies the type of database access - 
-XML, XSLT etc. At present only C<xml> is valid. If this is unspecified, XML is the default.
+Creates a new object. Host names must be valid URI. The type key specifies the
+type of database access - XML, XSLT etc. At present only C<xml> is valid. If
+this is unspecified, XML is the default.
 
 =cut
 
@@ -71,13 +73,16 @@ Marcel Grünauer, C<<marcel at cpan.org>>
 
 =head1 BUGS
 
-This distrobution is in it's early stages and B<things will be prone to breaking and changing in future versions>. 
-Please keep an eye out on the change log and the documentation of new releases before submitting bug reports.
+This distrobution is in it's early stages and B<things will be prone to breaking
+and changing in future versions>.  Please keep an eye out on the change log and
+the documentation of new releases before submitting bug reports.
 
-Please report any bugs or feature requests to C<bug-net::filemaker at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Net::FileMaker>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes. Please ensure to include the version of FileMaker Server 
-in your report.
+Please report any bugs or feature requests to C<bug-net::filemaker at
+rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Net::FileMaker>.  I will be
+notified, and then you'll automatically be notified of progress on your bug as I
+make changes. Please ensure to include the version of FileMaker Server in your
+report.
 
 =head1 SUPPORT
 
@@ -110,8 +115,9 @@ L<http://search.cpan.org/dist/Net::FileMaker/>
 
 =head1 DEVELOPMENT
 
-Everyone is welcome to help towards the project with bugfixes, feature requests or contributions. 
-You'll find the git repository for this project is located at L<http://github.com/squeeks/Net-FileMaker>.
+Everyone is welcome to help towards the project with bugfixes, feature requests
+or contributions.  You'll find the git repository for this project is located at
+L<http://github.com/squeeks/Net-FileMaker>.
 
 =head1 LICENSE AND COPYRIGHT
 
