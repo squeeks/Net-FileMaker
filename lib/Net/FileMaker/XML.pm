@@ -210,8 +210,9 @@ sub _assert_param
 	# 'cause it could be the name of a field 
 	# TODO: we might add a strict control to avoid passing others params than
 	# the ones with "-" like in findall etc
-    if($unclean_param =~ /^-.+$/x)
-	    {
+    
+	if($unclean_param =~ /^-.+$/x)
+	{
 		if($unclean_param =~/$acceptable_params/x)
 		{
 			$param = $unclean_param;
