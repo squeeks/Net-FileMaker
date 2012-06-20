@@ -60,7 +60,7 @@ It may return (possible results in parentheses):
 
 =item 
 
-* type (“normal”, “calculation”, or “summary”)
+* type ("normal", "calculation", or "summary")
 
 =item 
 
@@ -76,7 +76,7 @@ It may return (possible results in parentheses):
 
 =item 
 
-* result (“text”, “number”, “date”, “time”, “timestamp”, or “container”) 
+* result ("text", "number", "date", "time", "timestamp", or "container") 
 
 =back
 
