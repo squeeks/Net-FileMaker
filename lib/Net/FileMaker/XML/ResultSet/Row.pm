@@ -1,4 +1,5 @@
-package Net::FileMaker::XML::ResultSet::Row;
+package 
+	Net::FileMaker::XML::ResultSet::Row;
 
 use strict;
 use warnings;

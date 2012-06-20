@@ -11,14 +11,6 @@ use XML::Twig;
 
 Net::FileMaker::XML - Interact with FileMaker Server's XML Interface.
 
-=head1 VERSION
-
-Version 0.062
-
-=cut
-
-our $VERSION = 0.062;
-
 =head1 SYNOPSIS
 
 This module provides the interface for communicating with FileMaker Server's XML service.
@@ -98,7 +90,8 @@ sub database
 
 =head2 dbnames
 
-Returns an arrayref containing all XML/XSLT enabled databases for a given host. This method requires no authentication.
+Returns an arrayref containing all XML/XSLT enabled databases for a given host.
+This method requires no authentication.
 
 =cut
 
@@ -116,9 +109,10 @@ sub dbnames
 
 =head1 COMPATIBILITY
 
-This distrobution is actively tested against FileMaker Advanced Server 10.0.1.59 and 11.0.1.95. 
-Older versions are not tested at present, but feedback is welcome. See the messages present in the test suite on how to setup 
-tests against your server.
+This distrobution is actively tested against FileMaker Advanced Server 10.0.1.59
+and 11.0.1.95.  Older versions are not tested at present, but feedback is
+welcome. See the messages present in the test suite on how to setup tests
+against your server.
 
 =head1 SEE ALSO
 
@@ -139,8 +133,9 @@ sub _request
         $uri->path($args{resultset});
         
         my $url;
-	# This kind of defeats the purpose of using URI to begin with, but this fault has been reported
-	# on rt.cpan.org for over 2 years and many releases with no fix.
+	# This kind of defeats the purpose of using URI to begin with, but this
+	# fault has been reported on rt.cpan.org for over 2 years and many releases
+	# with no fix.
         if($args{params})
 	{
                 $uri->query_form(%{$args{params}});
@@ -211,10 +206,13 @@ sub _assert_param
 {
 	my($self, $unclean_param, $acceptable_params) = @_;
 	my $param;
-	# if the param is of private type '-something' let's check, otherwise skip 'cause it could be the name of a field
-	# todo: we might add a strict control to avoid passing others params than the ones with "-" like in findall etc
-    if($unclean_param =~ /^-.+$/x)
-	    {
+	# if the param is of private type '-something' let's check, otherwise skip
+	# 'cause it could be the name of a field 
+	# TODO: we might add a strict control to avoid passing others params than
+	# the ones with "-" like in findall etc
+    
+	if($unclean_param =~ /^-.+$/x)
+	{
 		if($unclean_param =~/$acceptable_params/x)
 		{
 			$param = $unclean_param;
@@ -255,7 +253,8 @@ sub _assert_params
             }
             else
             {
-                $params->{$param} = $args{params}->{$param} if $self->_assert_param($param, $acceptable_params->{$type});
+                $params->{$param} = $args{params}->{$param} 
+					if $self->_assert_param($param, $acceptable_params->{$type});
             }
         }
     }

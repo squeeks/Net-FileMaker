@@ -1,4 +1,5 @@
-package Net::FileMaker::Error;
+package 
+	Net::FileMaker::Error;
 
 use strict;
 use warnings;

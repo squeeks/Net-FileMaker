@@ -1,4 +1,5 @@
-package Net::FileMaker::Error::JA::XSLT;
+package 
+	Net::FileMaker::Error::JA::XSLT;
 
 use strict;
 use warnings;
