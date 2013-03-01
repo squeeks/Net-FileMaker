@@ -73,9 +73,10 @@ Marcel Grünauer, C<<marcel at cpan.org>>
 
 =head1 BUGS
 
-This distrobution is in it's early stages and B<things will be prone to breaking
-and changing in future versions>.  Please keep an eye out on the change log and
-the documentation of new releases before submitting bug reports.
+This distribution is now in maintainence mode as I (Squeeks) no longer have
+access to a FileMaker Server to test functionality. If you are able to either
+provide access to one or run the tests against one and provide feedback, please
+get in touch so better support can be provided to this.
 
 Please report any bugs or feature requests to C<bug-net::filemaker at
 rt.cpan.org>, or through the web interface at
