@@ -28,13 +28,13 @@ if(ref($layouts) eq 'ARRAY')
     my $records = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 2})->rows;
 
     for my $row (@$records){
-    	my $fields = $row->get_inflated_columns;
+        my $fields = $row->get_inflated_columns;
         foreach my $key (keys %$fields) {
-        	my $col = $fields->{$key};
-    		if(defined $col){
-            $success = 0 if(ref $col !~ m/^(ARRAY|SCALAR|DateTime)$/xms);    		
-    		}
-    	}
+            my $col = $fields->{$key};
+            if(defined $col){
+            $success = 0 if(ref $col !~ m/^(ARRAY|SCALAR|DateTime)$/xms);           
+            }
+        }
     }
 
 }

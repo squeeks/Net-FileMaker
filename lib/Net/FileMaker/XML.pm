@@ -42,29 +42,29 @@ Creates a new object. The specified must be a valid address or host name.
 
 sub new
 {
-	my($class, %args) = @_;
+    my($class, %args) = @_;
 
-	# If the protocol isn't specified, let's assume it's just HTTP.
-	if($args{host} !~/^http/x)
-	{
-		$args{host} = 'http://'.$args{host};
-	}
+    # If the protocol isn't specified, let's assume it's just HTTP.
+    if($args{host} !~/^http/x)
+    {
+        $args{host} = 'http://'.$args{host};
+    }
     require LWP::UserAgent;
-	my $self = {
-		host  => $args{host},
-		ua    => LWP::UserAgent->new,
-		xml   => XML::Twig->new,
-		uri   => URI->new($args{host}),
-		resultset => '/fmi/xml/fmresultset.xml', # Entirely for dbnames();
-	};
+    my $self = {
+        host  => $args{host},
+        ua    => LWP::UserAgent->new,
+        xml   => XML::Twig->new,
+        uri   => URI->new($args{host}),
+        resultset => '/fmi/xml/fmresultset.xml', # Entirely for dbnames();
+    };
 
-	if($args{error})
-	{
-		$self->{error} = Net::FileMaker::Error->new(lang => $args{error}, type => 'XML');
-	}
+    if($args{error})
+    {
+        $self->{error} = Net::FileMaker::Error->new(lang => $args{error}, type => 'XML');
+    }
 
     bless $self , $class;
-	return $self;
+    return $self;
 
 }
 
@@ -76,15 +76,15 @@ Initiates a new database object for querying data in the databse.
 
 sub database
 {
-	my($self, %args) = @_;
+    my($self, %args) = @_;
 
-	require Net::FileMaker::XML::Database;
-	return  Net::FileMaker::XML::Database->new(
-			host  => $self->{host},
-			db    => $args{db},
-			user  => $args{user} || '',
-			pass  => $args{pass} || ''
-		);
+    require Net::FileMaker::XML::Database;
+    return  Net::FileMaker::XML::Database->new(
+            host  => $self->{host},
+            db    => $args{db},
+            user  => $args{user} || '',
+            pass  => $args{pass} || ''
+        );
 }
 
 
@@ -97,13 +97,13 @@ This method requires no authentication.
 
 sub dbnames
 {
-	my $self = shift;
-	my $xml  = $self->_request(
-			resultset => $self->{resultset}, 
-			query     =>'-dbnames'
-	);
+    my $self = shift;
+    my $xml  = $self->_request(
+            resultset => $self->{resultset}, 
+            query     =>'-dbnames'
+    );
 
-	return $self->_compose_arrayref('DATABASE_NAME', $xml);
+    return $self->_compose_arrayref('DATABASE_NAME', $xml);
 
 }
 
@@ -133,11 +133,11 @@ sub _request
         $uri->path($args{resultset});
         
         my $url;
-	# This kind of defeats the purpose of using URI to begin with, but this
-	# fault has been reported on rt.cpan.org for over 2 years and many releases
-	# with no fix.
+    # This kind of defeats the purpose of using URI to begin with, but this
+    # fault has been reported on rt.cpan.org for over 2 years and many releases
+    # with no fix.
         if($args{params})
-	{
+    {
                 $uri->query_form(%{$args{params}});
                 $url = $uri->as_string."&".$args{query};
         }
@@ -155,14 +155,14 @@ sub _request
 
         my $res = $self->{ua}->request($req);
 
-	my $xml = $self->{xml}->parse($res->content);
-	my $xml_data = $xml->simplify;
+    my $xml = $self->{xml}->parse($res->content);
+    my $xml_data = $xml->simplify;
 
-	# Inject localised error message
-	if($self->{error})
-	{
-		$xml_data->{error}->{message} = $self->{error}->get_string($xml_data->{error}->{code});
-	}
+    # Inject localised error message
+    if($self->{error})
+    {
+        $xml_data->{error}->{message} = $self->{error}->get_string($xml_data->{error}->{code});
+    }
 
     $xml_data->{http_response} = $res;
     return $xml_data;
@@ -175,23 +175,23 @@ sub _request
 # A common occurance is recomposing response data so unnecessary structure is removed.
 sub _compose_arrayref
 {
-	my ($self, $fieldname, $xml) = @_;
-	
-	if(ref($xml->{resultset}->{record}) eq 'HASH')
-	{
-		return $xml->{resultset}->{record}->{field}->{$fieldname}->{data};
-	}
-	elsif(ref($xml->{resultset}->{record}) eq 'ARRAY')
-	{
-		my @output;
+    my ($self, $fieldname, $xml) = @_;
+    
+    if(ref($xml->{resultset}->{record}) eq 'HASH')
+    {
+        return $xml->{resultset}->{record}->{field}->{$fieldname}->{data};
+    }
+    elsif(ref($xml->{resultset}->{record}) eq 'ARRAY')
+    {
+        my @output;
 
-		for my $record (@{$xml->{resultset}->{record}})
-		{
-			push @output, $record->{field}->{$fieldname}->{data};
-		}
-		
-		return \@output;
-	}
+        for my $record (@{$xml->{resultset}->{record}})
+        {
+            push @output, $record->{field}->{$fieldname}->{data};
+        }
+        
+        return \@output;
+    }
 
 }
 
@@ -204,29 +204,29 @@ sub _compose_arrayref
 
 sub _assert_param
 {
-	my($self, $unclean_param, $acceptable_params) = @_;
-	my $param;
-	# if the param is of private type '-something' let's check, otherwise skip
-	# 'cause it could be the name of a field 
-	# TODO: we might add a strict control to avoid passing others params than
-	# the ones with "-" like in findall etc
+    my($self, $unclean_param, $acceptable_params) = @_;
+    my $param;
+    # if the param is of private type '-something' let's check, otherwise skip
+    # 'cause it could be the name of a field 
+    # TODO: we might add a strict control to avoid passing others params than
+    # the ones with "-" like in findall etc
     
-	if($unclean_param =~ /^-.+$/x)
-	{
-		if($unclean_param =~/$acceptable_params/x)
-		{
-			$param = $unclean_param;
-		}
-		else
-		{
-			# TODO: Localise this error message
-			carp "Invalid parameter specified - $unclean_param";
-		}
+    if($unclean_param =~ /^-.+$/x)
+    {
+        if($unclean_param =~/$acceptable_params/x)
+        {
+            $param = $unclean_param;
+        }
+        else
+        {
+            # TODO: Localise this error message
+            carp "Invalid parameter specified - $unclean_param";
+        }
     }else{
-    	$param = $unclean_param;
+        $param = $unclean_param;
     }
 
-	return $param;
+    return $param;
 }
 
 
@@ -236,13 +236,13 @@ sub _assert_param
 
 sub _assert_params
 {
-	my ($self , %args) = @_;
-	
-	my $params = $args{def_params};
-	my $acceptable_params = $args{acceptable_params};
-	my $type = $args{type};
-	
-	if($args{params} && ref($args{params}) eq 'HASH')
+    my ($self , %args) = @_;
+    
+    my $params = $args{def_params};
+    my $acceptable_params = $args{acceptable_params};
+    my $type = $args{type};
+    
+    if($args{params} && ref($args{params}) eq 'HASH')
     {
         for my $param(keys %{$args{params}})
         {
@@ -254,7 +254,7 @@ sub _assert_params
             else
             {
                 $params->{$param} = $args{params}->{$param} 
-					if $self->_assert_param($param, $acceptable_params->{$type});
+                    if $self->_assert_param($param, $acceptable_params->{$type});
             }
         }
     }

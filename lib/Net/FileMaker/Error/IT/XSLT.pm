@@ -1,5 +1,5 @@
 package 
-	Net::FileMaker::Error::IT::XSLT;
+    Net::FileMaker::Error::IT::XSLT;
 
 use strict;
 use warnings;

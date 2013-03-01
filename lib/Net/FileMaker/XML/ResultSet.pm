@@ -212,13 +212,13 @@ sub next_row
     my $self = shift;
     # if next row exists let's return it, otherwise undefined
     if( $self->{next_index} < scalar @{$self->{rows}} ) 
-	{
+    {
         my $index = $self->{next_index};
         $self->{next_index}++;
         return @{$self->{rows}}[$index];
     }
-	else
-	{
+    else
+    {
         return;
     }
 }
@@ -256,8 +256,8 @@ sub _parse_field_definition
     my ($self)  = @_;
     require Net::FileMaker::XML::ResultSet::FieldsDefinition;
     $self->{fields_def} = Net::FileMaker::XML::ResultSet::FieldsDefinition->new(
-		$self->{result_hash}{metadata}{'field-definition'}
-	);
+        $self->{result_hash}{metadata}{'field-definition'}
+    );
     return;
 }
 
@@ -269,17 +269,17 @@ sub _parse_rows
     my $cd = $self->fields_definition;    # column definition, I need it for the inflater
     my $ds = $self->datasource;
 
-	# If the fetch size is 1 it returns an hash with the row, if more it returns an array
+    # If the fetch size is 1 it returns an hash with the row, if more it returns an array
     if($self->fetch_size == 1)
-	{ 
+    { 
         push @{$self->{rows}} , Net::FileMaker::XML::ResultSet::Row->new(
-			$self->{result_hash}{resultset}{record},$self
-		);
+            $self->{result_hash}{resultset}{record},$self
+        );
     } 
-	else
-	{
+    else
+    {
         for my $row (@{$self->{result_hash}{resultset}{record}})
-		{
+        {
             push @{$self->{rows}} , Net::FileMaker::XML::ResultSet::Row->new($row,$self);
         }
     }

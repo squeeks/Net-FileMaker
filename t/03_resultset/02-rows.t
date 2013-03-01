@@ -24,8 +24,8 @@ ok($fmdb,'Logged in');
 my $layouts = $fmdb->layoutnames;
 if(ref($layouts) eq 'ARRAY')
 {
-	my $records = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 1})->rows;
-	is(ref(@$records[0]), 'Net::FileMaker::XML::ResultSet::Row', 'the first row of the RS is a Net::FileMaker::XML::ResultSet::Row');
+    my $records = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 1})->rows;
+    is(ref(@$records[0]), 'Net::FileMaker::XML::ResultSet::Row', 'the first row of the RS is a Net::FileMaker::XML::ResultSet::Row');
 }
 
 done_testing();

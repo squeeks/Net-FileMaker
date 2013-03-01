@@ -25,7 +25,7 @@ my $layouts = $fmdb->layoutnames;
 if(ref($layouts) eq 'ARRAY')
 {
     my $records = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 2});
-	is(ref($records->fields_definition), 'HASH', 'the fields method returns an Hash');
+    is(ref($records->fields_definition), 'HASH', 'the fields method returns an Hash');
 }
 done_testing();
 

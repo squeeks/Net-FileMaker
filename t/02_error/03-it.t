@@ -6,7 +6,7 @@ use Test::More tests => 7;
 use_ok('Net::FileMaker::Error');
 
 #
-#	XML Errors
+#   XML Errors
 #
 my $xml = Net::FileMaker::Error->new(lang => 'it', type => 'xml');
 ok($xml, 'Net::FileMaker::Error loaded XML strings in Italian');
@@ -18,7 +18,7 @@ my $xml_error_minusone = $xml->get_string('-1');
 is($xml_error_minusone, 'Errore sconosciuto', 'Returned error string on -1');
 
 #
-#	XSLT Errors
+#   XSLT Errors
 #
 my $xslt = Net::FileMaker::Error->new(lang => 'it', type => 'xslt');
 ok($xslt, 'Net::FileMaker::Error loaded XSLT strings in Italian');

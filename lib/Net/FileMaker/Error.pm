@@ -1,5 +1,5 @@
 package 
-	Net::FileMaker::Error;
+    Net::FileMaker::Error;
 
 use strict;
 use warnings;
@@ -28,22 +28,22 @@ English, Japanese and German are presently supported with the aims of covering a
 # fails to load the strings.
 sub new
 {
-	my($class, %args) = @_;
+    my($class, %args) = @_;
 
-	if($args{lang} ne '' && $args{type} ne '')
-	{
-		#TODO: Look at Module::Load instead?
-		my $class   = "Net/FileMaker/Error/".uc($args{lang})."/".uc($args{type}).'.pm';
-		my $package = "Net::FileMaker::Error::".uc($args{lang})."::".uc($args{type});
-		require $class;
-		#TODO: try/catch if the sub class exists?
-		return $package->new;
-	}
-	else
-	{
-		return;
-	}
-	
+    if($args{lang} ne '' && $args{type} ne '')
+    {
+        #TODO: Look at Module::Load instead?
+        my $class   = "Net/FileMaker/Error/".uc($args{lang})."/".uc($args{type}).'.pm';
+        my $package = "Net::FileMaker::Error::".uc($args{lang})."::".uc($args{type});
+        require $class;
+        #TODO: try/catch if the sub class exists?
+        return $package->new;
+    }
+    else
+    {
+        return;
+    }
+    
 }
 
 1; # End of Net::FileMaker::Error

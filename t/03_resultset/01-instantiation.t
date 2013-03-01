@@ -24,8 +24,8 @@ ok($fmdb,'Logged in');
 my $layouts = $fmdb->layoutnames;
 if(ref($layouts) eq 'ARRAY')
 {
-	my $records = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 1});
-	ok($records, 'Directly constructed Net::FileMaker::XML::ResultSet');
+    my $records = $fmdb->findall(layout => $layouts->[0], params => { '-max' => 1});
+    ok($records, 'Directly constructed Net::FileMaker::XML::ResultSet');
 }
 
 done_testing();

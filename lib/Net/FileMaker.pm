@@ -35,25 +35,25 @@ this is unspecified, XML is the default.
 
 sub new
 {
-	my($class, %args) = @_;
+    my($class, %args) = @_;
 
-	if($args{type} eq 'xml')
-	{
-		#TODO: Validate host is correct, must have http(s)? set first.
-		require Net::FileMaker::XML;
-		return  Net::FileMaker::XML->new(%args);
-	}
-	elsif(!$args{type} || $args{type} eq '')
-	{
-		# Assume no type specified - use XML.
-		require Net::FileMaker::XML;
-		return  Net::FileMaker::XML->new(%args);
-	}
-	# TODO: Add XSLT, PHP, etc.
-	else
-	{
-		croak 'Unknown type specified.';
-	}
+    if($args{type} eq 'xml')
+    {
+        #TODO: Validate host is correct, must have http(s)? set first.
+        require Net::FileMaker::XML;
+        return  Net::FileMaker::XML->new(%args);
+    }
+    elsif(!$args{type} || $args{type} eq '')
+    {
+        # Assume no type specified - use XML.
+        require Net::FileMaker::XML;
+        return  Net::FileMaker::XML->new(%args);
+    }
+    # TODO: Add XSLT, PHP, etc.
+    else
+    {
+        croak 'Unknown type specified.';
+    }
 
 }
 

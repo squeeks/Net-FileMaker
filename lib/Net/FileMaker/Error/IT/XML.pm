@@ -1,5 +1,5 @@
 package 
-	Net::FileMaker::Error::IT::XML;
+    Net::FileMaker::Error::IT::XML;
 
 use strict;
 use warnings;
